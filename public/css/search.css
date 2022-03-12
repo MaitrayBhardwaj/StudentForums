@@ -1,0 +1,183 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+a{
+	text-decoration: none;
+	color: black;
+}
+
+#header{
+	padding: 1em 1em 1em 1em;
+	background-color: white;
+	border-bottom: 0.01em solid #CCC;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.searchBox{
+	justify-self: center;
+	align-self: center;
+	margin: 0 3%;
+}
+
+.searchBox form{
+	display: flex;
+}
+
+.searchBox input{
+	padding: 0.75em 3em 0.5em 0.75em;
+	margin-left: 0;
+	border: 0.01em solid #CCC;
+}
+
+.searchBox button{
+	font-family: 'Roboto Condensed', sans-serif;
+	border: 0.01em solid #CCC;
+	border-left: 0;
+	padding: 0.5em 0.75em;
+}
+
+::placeholder{
+	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 1em;
+}
+
+div.left a img{
+	height: 1em;
+	width: 1em;
+	margin-right: 0.25em;
+}
+
+div.left{
+	justify-self: flex-start;
+	display: flex;
+	align-items: center;
+}
+
+div.left a{
+	display: flex;
+	align-items: center;
+	font-size: 2em;
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+div.right a{
+	font-size: 1.3em;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	font-family: 'Roboto Condensed', sans-serif;
+	transition: border-bottom 0.1s;
+}
+
+div.right a:hover{
+	border-bottom: 2px solid black;
+}
+
+
+div.right a img{
+	height: 1em;
+	width: 1em;
+}
+
+div.right{
+	display: flex;
+	justify-self: flex-end;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.container{
+	padding: 2.5em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.container > h2{
+	align-self: flex-start;
+	font-family: 'Roboto', sans-serif;
+	margin-bottom: 1em;
+	font-size: 2.5em;
+	font-weight: 800;
+	border-bottom: 0.01em solid #CCC;
+	width: 100%;
+}
+
+.container p{
+	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 1.2em;
+	color: #999;
+	text-align: center;
+	width: 75%;
+}
+
+.threads{
+	align-self: stretch;
+	display: flex;
+	flex-direction: column-reverse;
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+.searchResults, .popular{
+	width: 100%;
+	padding: 0.5em;
+	flex-grow: 1;
+}
+
+.popular{
+	padding-bottom: 4em;
+	border-bottom: 0.01em solid #CCC;
+}
+
+.resThreads, .popThreads{
+	list-style-type: none;
+}
+
+.searchResults h1, .popular h1{
+	font-size: 1.5em;
+	padding: 2em 0.5em 0.25em 0;
+}
+
+.resThreads li a:hover, .popThreads li a:hover{
+	text-decoration: underline;
+}
+
+.resThreads li, .popThreads li{
+	display: flex;
+	padding: 1em;
+	align-items: center;
+	background-color: rgba(238, 238, 238, 0.5);
+}
+
+.threadLink{
+	flex-grow: 2;
+	font-size: 1.2em;
+}
+
+.threadInfo{
+	align-items: center;
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+}
+
+.postCount{
+	font-size: 1.75em;
+	font-family: 'Roboto', sans-serif;
+}
+
+.resThreads li:nth-of-type(2n), .popThreads li:nth-of-type(2n){
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.resThreads li:first-child, .popThreads li:first-child{
+	margin-top: 0.5em;
+}
+
+.userInfo{
+	justify-self: flex-end;
+	flex-grow: 0.5;
+}
