@@ -7,20 +7,24 @@ const threadSchema = new mongoose.Schema({
 		maxLength: 50,
 		minLength: 5
 	},
+	// OP: {
+	// 	type: mongoose.Schema.Types.ObjectId,
+	// 	ref: 'User',
+	// 	required: true
+	// },
 	OPName: {
 		type: String,
 		required: true
 	},
-	postCount: {
-		type: Number,
-		required: true,
-		default: 0,
-		min: 0
-	},
 	createdAt: {
 		type: Date,
 		required: true,
-	}
+		default: Date.now()
+	},
+	posts: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Post'
+	}]
 })
 
 module.exports = mongoose.model('Thread', threadSchema)

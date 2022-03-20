@@ -1,6 +1,4 @@
 <% layout('layouts/boilerplate.ejs') %>
-
-<link rel="stylesheet" href="/css/styles.css">
 <div class="container">
 	<div class="browseCat">
 		<h1>Browse Categories</h1>
@@ -14,23 +12,42 @@
 			<% } %>
 		</div>
 	</div>
+
 	<div class="threads">
 		<div class="recent">
 			<h1>Recent Threads</h1>
 			<ul class="recentThreads">
-				<% for(let recThread of recThreads) { %>
+				<% for(let recThread of recThreads) %>
 				<li>
 					<a href="/thread/<%= recThread._id %>" class="threadLink"><%= recThread.title %></a>
 					<div class="threadInfo">
-						<span class="postCount"><%= recThread.posts.length || 0 %></span>
+						<span class="postCount"><%= recThread.postCount %></span>
 						<span>Posts</span>
 					</div>
 					<div class="userInfo">
 						<div class="ogPoster">By <a href="/profile/<%= recThread.OPName %>"><%= recThread.OPName %></a></div>
-						<div class="timeCreated"><%= recThread.createdAt.toISOString().substring(0, 10) %></a></div>
+						<div class="timeCreated"><%= recThread.createdAt %></a></div>
 					</div>
 				</li>
 				<% } %>
+			</ul>
+		</div>
+
+		<div class="popular">
+			<h1>Popular Threads</h1>
+			<ul class="popThreads">
+				<% for(let popThread of popThreads) %>
+				<li>
+					<a href="/thread/<%= popThread._id %>" class="threadLink"><%= popThread.title %></a>
+					<div class="threadInfo">
+						<span class="postCount"><%= popThread.postCount %></span>
+						<span>Posts</span>
+					</div>
+					<div class="userInfo">
+						<div class="ogPoster">By <a href="/profile/<%= popThread.OPName %>"><%= popThread.OPName %></a></div>
+						<div class="timeCreated"><%= popThread.createdAt %></a></div>
+					</div>
+				</li>
 			</ul>
 		</div>
 	</div>

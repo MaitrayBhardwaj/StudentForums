@@ -1,27 +1,22 @@
 <% layout('layouts/boilerplate.ejs') %>
 
+<link rel="stylesheet" href="/css/thread.css">
+
 <div class="container">
-	<h1>Thread Title</h1>
+	<h1><%= thread.title %></h1>
 
-	<div class="ogPost">
-		<span><a href="/profile/<%= thread.OPName %>"><%= thread.OPName %></a> said:</span>
-		<div class="postContent">
-			<%= posts[0].postContent %>
-		</div>
-	</div>
-
-	<div class="replies">
-		<% for(let i = 1; i < posts.length; i++) { %>
+		<div class="replies">
+		<% for(let post of posts) { %>
 		<div class="post">
-			<span><a href="/profile/<%= posts[i].authorName %>"><%= posts[i].authorName %></a> said:</span>
+			<span><a href="/profile/<%= post.authorName %>"><%= post.authorName %></a> said:</span>
 			<div class="postContent">
-				<%= posts[i].postContent %>
+				<%= post.postContent %>
 			</div>
 		</div>
 		<% } %>
 	</div>
 
-	<form action="/thread/<%= thread._id %>/new" method="POST" id="newPost">
+	<form action="/thread/<%= thread._id %>" method="POST" id="newPost">
 		<textarea name="postContent" id="newPostCont" cols="60" rows="10"></textarea>
 		<div class="postBtns">
 			<button id="submitPost">Submit</button>
@@ -31,4 +26,4 @@
 	<button class="addPost">Add a Post</button>
 </div>
 
-<script src="js/thread.js"></script>
+<script src="/js/thread.js"></script>

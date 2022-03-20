@@ -8,10 +8,10 @@ const userSchema = new mongoose.Schema({
 		minLength: 5
 	},
 	aboutMe: {
-		type: Number,
+		type: String,
 		required: true,
-		default: 0,
-		min: 0
+		maxLength: 2000,
+		minLength: 0
 	},
 	createdAt: {
 		type: Date,
@@ -29,7 +29,11 @@ const userSchema = new mongoose.Schema({
 	isAdmin: {
 		type: Boolean,
 		required: true
-	}
+	},
+	recentPosts: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Post'
+	}]
 })
 
-module.exports = mongoose.model('Profile', userSchema)
+module.exports = mongoose.model('User', userSchema)
