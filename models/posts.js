@@ -14,11 +14,12 @@ const postSchema = new mongoose.Schema({
 	postContent: {
 		type: String,
 		minLength: 15,
-		maxLength: 1000,
+		maxLength: 8000,
 		required: true
 	},
 	createdAt: {
 		type: Date,
+		default: Date.now()
 	},
 	modifiedAt: {
 		type: Date

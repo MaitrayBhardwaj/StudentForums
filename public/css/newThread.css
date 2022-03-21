@@ -1,0 +1,45 @@
+.container{
+	font-family: 'Roboto Condensed', sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.formCont{
+	display: flex;
+	flex-direction: column;
+	border: 0.01em solid #CCC;
+	padding: 1em 5em;
+	margin: 2em;
+}
+
+.formCont h1{
+	margin: 1em 0.5em;
+}
+
+.formCont form{
+	display: flex;
+	flex-direction: column;
+}
+
+.formCont form input, .formCont form textarea, .formCont form button{
+	font-family: 'Roboto Condensed', sans-serif;
+	padding: 1.2em;
+	margin: 1em;
+	border: 0.01em solid #CCC;
+	outline: none;
+	font-size: 1em;
+}
+
+.formCont form input::placeholder, .formCont form textarea::placeholder{
+	font-size: 1em;
+}
+
+.formCont form button{
+	background-color: white;
+	transition: background-color 0.1s ease-in-out;
+}
+
+.formCont form button:hover{
+	background-color: #DDD;
+}

@@ -7,9 +7,9 @@
 
 		<div class="catList">
 			<% for(let category of categories) { %>
-			<a href="/category/<%= category %>" class="category">
-				<img src="icons/<%= category %>.png" alt="">
-				<div><%= category %></div>
+			<a href="/category/<%= category.name %>" class="category">
+				<img src="/icons/<%= category.name %>.png" alt="">
+				<div><%= category.name %></div>
 			</a>
 			<% } %>
 		</div>
@@ -27,7 +27,25 @@
 					</div>
 					<div class="userInfo">
 						<div class="ogPoster">By <a href="/profile/<%= recThread.OPName %>"><%= recThread.OPName %></a></div>
-						<div class="timeCreated"><%= recThread.createdAt.toISOString().substring(0, 10) %></a></div>
+						<div class="timeCreated"><%= recThread.lastModified.toISOString().substring(0, 10) %>  <%= recThread.lastModified.getUTCHours() %>:<%= recThread.lastModified.getUTCMinutes() %> </a></div>
+					</div>
+				</li>
+				<% } %>
+			</ul>
+		</div>
+		<div class="popular">
+			<h1>Popular Threads</h1>
+			<ul class="popThreads">
+				<% for(let popThread of popThreads) { %>
+				<li>
+					<a href="/thread/<%= popThread._id %>" class="threadLink"><%= popThread.title %></a>
+					<div class="threadInfo">
+						<span class="postCount"><%= popThread.posts.length || 0 %></span>
+						<span>Posts</span>
+					</div>
+					<div class="userInfo">
+						<div class="ogPoster">By <a href="/profile/<%= popThread.OPName %>"><%= popThread.OPName %></a></div>
+						<div class="timeCreated"><%= popThread.createdAt.toISOString().substring(0, 10) %>  <%= popThread.createdAt.getUTCHours() %>:<%= popThread.createdAt.getUTCMinutes() %> </a></div>
 					</div>
 				</li>
 				<% } %>

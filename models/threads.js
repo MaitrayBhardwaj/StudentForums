@@ -14,17 +14,25 @@ const threadSchema = new mongoose.Schema({
 	// },
 	OPName: {
 		type: String,
-		required: true
+		default: 'Biochemistry'
 	},
 	createdAt: {
 		type: Date,
-		required: true,
 		default: Date.now()
 	},
 	posts: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Post'
-	}]
+	}],
+	lastModified: {
+		type: Date,
+		default: Date.now()
+	},
+	category: {
+		type: String,
+		enum: ['General Discussion', 'Doubt Solving', 'Consultation', 'Resources', 'Support', 'Miscellaneous'],
+		required: true
+	}
 })
 
 module.exports = mongoose.model('Thread', threadSchema)

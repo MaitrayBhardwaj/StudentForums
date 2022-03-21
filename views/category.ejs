@@ -1,0 +1,41 @@
+<% layout('layouts/boilerplate.ejs') %>
+
+<link rel="stylesheet" href="/css/category.css">
+
+<style>
+	.container{
+		background-image: url('/icons/<%= category.name %>.png');
+		background-position: bottom;
+		background-size: auto;
+		background-repeat: no-repeat;
+	}
+</style>
+
+<div class="container">
+	<h1><%= category.name %></h1>
+	<p><%= category.desc %></p>
+
+	<div class="threads">
+		<div class="recent">
+			<div class="headingAndAddThread">
+				<h1>Recent Threads</h1>
+				<a href="/category/<%= category.name %>/new">Add Thread</a>
+			</div>
+			<ul class="recentThreads">
+				<% for(let thread of threads) { %>
+				<li>
+					<a href="/thread/<%= thread._id %>" class="threadLink"><%= thread.title %></a>
+					<div class="threadInfo">
+						<span class="postCount"><%= thread.posts.length || 0 %></span>
+						<span>Posts</span>
+					</div>
+					<div class="userInfo">
+						<div class="ogPoster">By <a href="userProfile.html"><%= thread.OPName %></a></div>
+						<div class="timeCreated"><%= thread.lastModified.toISOString().substring(0, 10) %>  <%= thread.lastModified.getUTCHours() %>:<%= thread.lastModified.getUTCMinutes() %></a></div>
+					</div>
+				</li>
+				<% } %>
+			</ul>
+		</div>
+	</div>
+</div>
