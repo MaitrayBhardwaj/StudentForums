@@ -43,3 +43,11 @@
 .formCont form button:hover{
 	background-color: #DDD;
 }
+
+.was-validated{
+	border: 0.05em solid green;
+}
+
+.not-validated{
+	border: 0.05em solid red;
+}

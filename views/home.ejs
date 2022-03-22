@@ -27,7 +27,7 @@
 					</div>
 					<div class="userInfo">
 						<div class="ogPoster">By <a href="/profile/<%= recThread.OPName %>"><%= recThread.OPName %></a></div>
-						<div class="timeCreated"><%= recThread.lastModified.toISOString().substring(0, 10) %>  <%= recThread.lastModified.getUTCHours() %>:<%= recThread.lastModified.getUTCMinutes() %> </a></div>
+						<div class="timeCreated"><%= recThread.lastModified.toISOString().substring(0, 10) %>  <%= recThread.lastModified.getUTCHours() %>:<%= recThread.lastModified.getUTCMinutes() > 10 ? '' : '0' %><%= recThread.lastModified.getUTCMinutes() %> </a></div>
 					</div>
 				</li>
 				<% } %>
@@ -45,7 +45,7 @@
 					</div>
 					<div class="userInfo">
 						<div class="ogPoster">By <a href="/profile/<%= popThread.OPName %>"><%= popThread.OPName %></a></div>
-						<div class="timeCreated"><%= popThread.createdAt.toISOString().substring(0, 10) %>  <%= popThread.createdAt.getUTCHours() %>:<%= popThread.createdAt.getUTCMinutes() %> </a></div>
+						<div class="timeCreated"><%= popThread.createdAt.toISOString().substring(0, 10) %>  <%= popThread.createdAt.getUTCHours() %>:<%= popThread.createdAt.getUTCMinutes() > 10 ? '' : '0' %><%= popThread.createdAt.getUTCMinutes() %> </a></div>
 					</div>
 				</li>
 				<% } %>

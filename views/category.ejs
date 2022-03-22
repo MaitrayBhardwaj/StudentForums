@@ -31,7 +31,7 @@
 					</div>
 					<div class="userInfo">
 						<div class="ogPoster">By <a href="userProfile.html"><%= thread.OPName %></a></div>
-						<div class="timeCreated"><%= thread.lastModified.toISOString().substring(0, 10) %>  <%= thread.lastModified.getUTCHours() %>:<%= thread.lastModified.getUTCMinutes() %></a></div>
+						<div class="timeCreated"><%= thread.lastModified.toISOString().substring(0, 10) %>  <%= thread.lastModified.getUTCHours() %>:<%= thread.lastModified.getUTCMinutes() > 10 ? '' : '0' %><%= thread.lastModified.getUTCMinutes() %></a></div>
 					</div>
 				</li>
 				<% } %>

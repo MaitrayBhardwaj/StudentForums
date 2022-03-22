@@ -7,3 +7,4 @@
 * ejs - for embedded javascript
 * ejs-mate - assists in ejs
 * method-override - enables the use of DELETE, PATCH, PUT requests
+* joi - for data validation

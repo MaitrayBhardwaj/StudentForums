@@ -16,7 +16,7 @@
 		<% } %>
 	</div>
 
-	<form action="/thread/<%= thread._id %>" method="POST" id="newPost">
+	<form action="/thread/<%= thread._id %>" method="POST" class="needs-validation" id="newPost" novalidate>
 		<textarea name="postContent" id="newPostCont" cols="60" rows="10"></textarea>
 		<div class="postBtns">
 			<button id="submitPost">Submit</button>
@@ -27,3 +27,4 @@
 </div>
 
 <script src="/js/thread.js"></script>
+<script src="/js/newPostValidation.js"></script>

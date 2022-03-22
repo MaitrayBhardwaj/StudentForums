@@ -10,6 +10,8 @@ const User = require('./models/users')
 const Category = require('./models/categories')
 
 const wrapAsync = require('./utils/wrapAsync')
+const validateNewThread = require('./utils/validateNewThread')
+const validateNewPost = require('./utils/validateNewPost')
 
 mongoose.connect('mongodb://localhost:27017/StuFor')
 	.then(() => {
@@ -58,7 +60,7 @@ app.get('/thread/:id', wrapAsync(async (req, res, next) => {
 	res.render('thread', { thread, posts })
 }))
 
-app.post('/thread/:id', wrapAsync(async (req, res, next) => {
+app.post('/thread/:id', validateNewPost, wrapAsync(async (req, res, next) => {
 	const newPost = new Post(req.body)
 	const thread = await Thread.findById(req.params.id)
 	newPost.parentThread = thread
@@ -81,7 +83,7 @@ app.get('/category/:catName/new', wrapAsync(async (req, res, next) => {
 	res.render('newThread', { category })
 }))
 
-app.post('/category/:catName/new', wrapAsync(async (req, res, next) => {
+app.post('/category/:catName/new', validateNewThread, wrapAsync(async (req, res, next) => {
 	const category = await Category.findOne({ name: req.params.catName })
 	const { title, postContent } = req.body
 	const newThread = new Thread({ title })
@@ -111,8 +113,8 @@ app.get('/search', wrapAsync(async (req, res, next) => {
 }))
 
 app.use((err, req, res, next) => {
-	const status = err.status || 500
-	res.status(status).send(err.message)
+	const { status = 500, message } = err
+	res.status(status).render('error', { message, status })
 })
 
 app.listen(3000, () => {

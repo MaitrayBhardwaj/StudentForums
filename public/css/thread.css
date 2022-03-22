@@ -13,8 +13,10 @@
 }
 
 .postContent{
+	white-space: pre-line;
 	border: 0.01em solid #CCC;
 	padding: 1em;
+	padding-top: 0;
 	margin: 1em;
 }
 
