@@ -6,11 +6,11 @@
 	flex-direction: column;
 }
 
-.container > h2{
+.container h2{
 	align-self: flex-start;
 	font-family: 'Roboto', sans-serif;
-	margin-bottom: 1em;
 	font-size: 2.5em;
+	margin: 0 0 0.5em 0;
 	font-weight: 800;
 	border-bottom: 0.01em solid #CCC;
 	width: 100%;
@@ -22,6 +22,22 @@
 	color: #999;
 	text-align: center;
 	width: 75%;
+}
+
+.container form{
+	align-self: flex-start;
+}
+
+.container form input, .container form button{
+	padding: 0.75em;
+	font-family: 'Roboto Condensed', sans-serif;
+	border: 0.01em solid #CCC;
+	outline: none;
+}
+
+.container form button{
+	background-color: white;
+	transition: background-color 0.2s ease;
 }
 
 .threads{
@@ -48,6 +64,7 @@
 
 .searchResults h1, .popular h1{
 	font-size: 1.5em;
+	border-bottom: 0.01em solid #CCC;
 	padding: 2em 0.5em 0.25em 0;
 }
 
@@ -91,4 +108,8 @@
 .userInfo{
 	justify-self: flex-end;
 	flex-grow: 0.5;
+}
+
+.container form button:hover{
+	background-color: #DDD;
 }

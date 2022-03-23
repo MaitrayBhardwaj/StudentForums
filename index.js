@@ -106,9 +106,15 @@ app.post('/category/:catName/new', validateNewThread, wrapAsync(async (req, res,
 }))
 
 app.get('/search', wrapAsync(async (req, res, next) => {
-	const { q } = req.query
+	const { q, user } = req.query
 	const regex = new RegExp(q, 'i')
-	const results = await Thread.find({ "title": { $regex : regex } })
+	let results = []
+	if(!user){
+		results = await Thread.find({ "title": { $regex : regex } })
+	}
+	else{
+		results = await Thread.find({ "title": { $regex : regex}, "OPName": user})
+	}
 	res.render('search', { results, q})
 }))
 

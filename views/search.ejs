@@ -3,8 +3,12 @@
 <link rel="stylesheet" href="/css/search.css">
 
 <div class="container">
-	<h2>You searched for "<%= q %>"</h2>
-
+	<h2>Advanced Search</h2>
+	<form action="/search" method="GET">
+		<input type="text" placeholder="Search for term" name="q">
+		<input type="text" placeholder="Post by User" name="user">
+		<button>Search</button>
+	</form>
 	<div class="threads">
 		<div class="searchResults">
 			<h1>Search Results</h1>
