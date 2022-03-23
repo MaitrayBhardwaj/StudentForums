@@ -87,3 +87,29 @@ div.right{
 	justify-content: space-around;
 	align-items: center;
 }
+
+.catsNav{
+	position: fixed;
+	right: 10%;
+	top: 7.5%;
+	background-color: white;
+	display: none;
+}
+
+.catsNav li{
+	border: 0.01em solid #CCC;
+	border-top: 0;
+	list-style-type: none;
+	font-family: 'Roboto Condensed', sans-serif;
+	padding: 1em;
+	margin: 0;
+	text-align: center;
+}
+
+.catsNav li:first-child{
+	border-top: 0.01em solid #CCC;
+}
+
+.catsNav li:hover{
+	background-color: #EEE;
+}
