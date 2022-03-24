@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Post = require('./posts')
 
 const threadSchema = new mongoose.Schema({
 	title: {
@@ -32,6 +33,12 @@ const threadSchema = new mongoose.Schema({
 		type: String,
 		enum: ['General Discussion', 'Doubt Solving', 'Consultation', 'Resources', 'Support', 'Miscellaneous'],
 		required: true
+	}
+})
+
+threadSchema.post('findOneAndDelete', async (data) => {
+	for(let post of data.posts){
+		Post.findByIdAndDelete(post._id)
 	}
 })
 

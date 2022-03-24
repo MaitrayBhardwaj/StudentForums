@@ -2,6 +2,7 @@ let addPost = document.querySelector('.addPost')
 
 addPost.addEventListener('click', () => {
 	document.querySelector('#newPost').style.display = 'block';
+	document.querySelector('#newPostCont').focus();
 	addPost.style.display = 'none';
 })
 

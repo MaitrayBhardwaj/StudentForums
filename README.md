@@ -8,3 +8,6 @@
 * ejs-mate - assists in ejs
 * method-override - enables the use of DELETE, PATCH, PUT requests
 * joi - for data validation
+* express-session - for sessions
+* connect-flash - for flash messages
+* dotenv - for accessing environment variables
