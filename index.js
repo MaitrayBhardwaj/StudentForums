@@ -19,7 +19,7 @@ const wrapAsync = require('./utils/wrapAsync')
 const validateNewThread = require('./utils/validateNewThread')
 const validateNewPost = require('./utils/validateNewPost')
 const validateNewUser = require('./utils/validateNewUser')
-
+const expressError = require('./utils/expressError')
 
 mongoose.connect('mongodb://localhost:27017/StuFor')
 	.then(() => {
@@ -173,7 +173,7 @@ app.get('/login', (req, res) => {
 	res.render('login')
 })
 
-app.all('*', (req, res) => {
+app.all('*', (req, res, next) => {
 	next(new expressError("Page Not Found", 404))
 })
 
