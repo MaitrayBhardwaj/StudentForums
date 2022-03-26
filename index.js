@@ -165,6 +165,18 @@ app.get('/search', wrapAsync(async (req, res, next) => {
 	res.render('search', { results, q, user })
 }))
 
+app.get('/signup', (req, res) => {
+	res.render('register')
+})
+
+app.get('/login', (req, res) => {
+	res.render('login')
+})
+
+app.all('*', (req, res) => {
+	next(new expressError("Page Not Found", 404))
+})
+
 app.use((err, req, res, next) => {
 	const { status = 500, message } = err
 	res.status(status).render('error', { message, status })

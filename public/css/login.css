@@ -1,0 +1,18 @@
+#remMe{
+	display: flex;
+	align-items: center;
+}
+
+#remMe input{
+	padding: 0;
+	margin: 0;
+	display: inline;
+	width: 32px;
+	height: 32px;
+	border: 0;
+}
+
+#remMe span{
+	margin-left: 0.2em;
+	font-family: 'Roboto Condensed', sans-serif;
+}

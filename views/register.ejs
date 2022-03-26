@@ -1,0 +1,15 @@
+<% layout('layouts/boilerplate.ejs') %>
+
+<link rel="stylesheet" href="/css/register.css">
+
+<div class="container">
+	<div class="regis">
+		<h1>Sign Up to StuFor!</h1>
+		<form action="/signup" method="POST" novalidate>
+			<input type="email" name="email" placeholder="Email Address" required>
+			<input type="text" name="username" placeholder="Username" required>
+			<input type="password" name="password" placeholder="Password" required>
+			<button>Sign Up</button>
+		</form>
+	</div>
+</div>
