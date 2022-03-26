@@ -11,3 +11,6 @@
 * express-session - for sessions
 * connect-flash - for flash messages
 * dotenv - for accessing environment variables
+* passport - for easy user authentication
+* passport-local - for Passport's local strategy
+* passport-local-mongoose - for easy integration between passport and mongoose

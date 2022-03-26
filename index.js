@@ -7,6 +7,8 @@ const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 const session = require('express-session')
 const flash = require('connect-flash')
+const passport = require('passport')
+const passportLocal = require('passport-local')
 
 const Thread = require('./models/threads')
 const Post = require('./models/posts')
@@ -16,6 +18,7 @@ const Category = require('./models/categories')
 const wrapAsync = require('./utils/wrapAsync')
 const validateNewThread = require('./utils/validateNewThread')
 const validateNewPost = require('./utils/validateNewPost')
+const validateNewUser = require('./utils/validateNewUser')
 
 
 mongoose.connect('mongodb://localhost:27017/StuFor')
@@ -38,12 +41,15 @@ app.use(session({
 	saveUninitialized: true,
 	cookie: {
 		httpOnly: true,
-		expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-		maxAge: 1000 * 60 * 60 * 24 * 7
+		expires: Date.now() + 1000 * 60 * 60 * 24 * 14,
+		maxAge: 1000 * 60 * 60 * 24 * 14
 	}
 }))
 
+app.use(passport.initialize())
+app.use(passport.session())
 app.use((req, res, next) => {
+	res.locals.user = req.user
 	res.locals.success = req.flash('success')
 	res.locals.error = req.flash('error')
 	res.locals.warning = req.flash('warning')
@@ -51,9 +57,24 @@ app.use((req, res, next) => {
 	next()
 })
 
+const isLoggedIn = (req, res, next) => {
+	if(!req.isAuthenticated()){
+		req.session.returnTo = req.originalUrl
+		req.flash('error', 'You must be logged in to access that!')
+		return res.redirect('/login')
+	}
+	else{
+		next()
+	}
+}
+
 app.engine('ejs', ejsMate)
 app.set('views', path.join(__dirname, '/views'))
 app.set('view engine', 'ejs')
+
+passport.use(new passportLocal(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
 
 app.get('/', wrapAsync(async (req, res, next) => {
 	const categories = await Category.find({})
