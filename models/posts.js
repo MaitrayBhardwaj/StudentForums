@@ -1,15 +1,14 @@
 const mongoose = require('mongoose')
 
 const postSchema = new mongoose.Schema({
-	// author: {
-	// 	type: mongoose.Schema.Types.ObjectId,
-	// 	ref: 'User'
-	// 	required: true,
-	// },
+	author: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+		required: true
+	},
 	authorName: {
 		type: String,
-		required: true,
-		default: 'Biochemistry'
+		required: true
 	},
 	postContent: {
 		type: String,

@@ -3,3 +3,9 @@
 		<%= success %>
 	</div>
 <% } %>
+
+<% if(error && error.length !== 0) { %>
+	<div class="flashMessage errorFlash">
+		<%= error %>
+	</div>
+<% } %>

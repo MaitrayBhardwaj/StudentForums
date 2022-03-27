@@ -16,15 +16,16 @@ body{
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
-	margin: 5em 0 0 0;
 	width: 30%;
 	align-items: center;
+	margin: 2em;
 	border: 0.01em solid #BBB;
-	padding: 2em 5em 0 5em;
+	padding: 2em 5em 2em 5em;
 }
 
 .regis h1{
 	text-align: center;
+	margin-bottom: 2em;
 	font-family: 'Roboto Condensed', sans-serif;
 }
 
@@ -39,17 +40,15 @@ body{
 .regis form *{
 	width: 200%;
 	margin: 1em 0;
+	padding: 1em;
 }
 
 .regis form input{
-	padding: 1.2em;
-	outline: none;
 	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 1em;
 }
 
 .regis button{
-	width: 205%;
-	padding: 1.2em;
 	background-color: #0E3EDA;
 	color: white;
 	border: 0;

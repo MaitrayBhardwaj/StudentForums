@@ -8,14 +8,14 @@ const threadSchema = new mongoose.Schema({
 		maxLength: 50,
 		minLength: 5
 	},
-	// OP: {
-	// 	type: mongoose.Schema.Types.ObjectId,
-	// 	ref: 'User',
-	// 	required: true
-	// },
+	OP: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+		required: true
+	},
 	OPName: {
 		type: String,
-		default: 'Biochemistry'
+		required: true
 	},
 	createdAt: {
 		type: Date,

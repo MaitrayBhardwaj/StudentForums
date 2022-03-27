@@ -105,10 +105,13 @@ app.get('/thread/:id', wrapAsync(async (req, res, next) => {
 	res.render('thread', { thread, posts })
 }))
 
-app.post('/thread/:id', validateNewPost, wrapAsync(async (req, res, next) => {
+app.post('/thread/:id', isLoggedIn, validateNewPost, wrapAsync(async (req, res, next) => {
+	const user = req.user
 	const newPost = new Post(req.body)
 	const thread = await Thread.findById(req.params.id)
 	newPost.parentThread = thread
+	newPost.author = user
+	newPost.authorName = user.username
 	await newPost.save()
 	thread.lastModified = Date.now()
 	thread.posts.push(newPost)
@@ -129,11 +132,12 @@ app.get('/category/:catName/new', wrapAsync(async (req, res, next) => {
 	res.render('newThread', { category })
 }))
 
-app.post('/category/:catName/new', validateNewThread, wrapAsync(async (req, res, next) => {
+app.post('/category/:catName/new', isLoggedIn, validateNewThread, wrapAsync(async (req, res, next) => {
 	const category = await Category.findOne({ name: req.params.catName })
+	const user = req.user;
 	const { title, postContent } = req.body
-	const newThread = new Thread({ title })
-	const newPost = new Post({ postContent })
+	const newThread = new Thread({ title, OP: user, OPName: user.username })
+	const newPost = new Post({ postContent, author: user, authorName: user.username })
 	newThread.lastModified = Date.now()
 	newThread.createdAt = Date.now()
 	newThread.category = req.params.catName
@@ -146,6 +150,9 @@ app.post('/category/:catName/new', validateNewThread, wrapAsync(async (req, res,
 		await Thread.findByIdAndDelete(newThread._id)
 		res.redirect(`/category/${req.params.catName}/new`)
 	}
+	const poster = await User.findById(user._id)
+	poster.postCount = poster.postCount + 1
+	await poster.save()
 	newThread.posts.push(newPost)
 	await newThread.save()
 	req.flash('success', 'New thread created successfully!')
@@ -172,6 +179,36 @@ app.get('/signup', (req, res) => {
 app.get('/login', (req, res) => {
 	res.render('login')
 })
+
+app.post('/signup', validateNewUser, wrapAsync(async (req, res, next) => {
+	const { username, email, password } = req.body
+	const user = new User({ username, email })
+	try{
+		const newUser = await User.register(user, password)
+		req.login(newUser, err => {
+			if(err) return next(err);
+			req.flash('success', 'Successfully signed up on StuFor!')
+			res.redirect('/')
+		})
+	}
+	catch(err) {
+		req.flash('error', err.message)
+		res.redirect('/signup')
+	}
+}))
+
+app.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login'}), wrapAsync(async (req, res, next) => {
+	const { username } = req.body
+	const redirectTo = req.session.returnTo || '/'
+	delete req.session.returnTo
+	req.flash('success', `Welcome back, ${username}! Logged in successfully.`)
+	res.redirect(redirectTo)
+}))
+
+app.get('/profile/:name', wrapAsync(async (req, res, next) => {
+	const targetUser = await User.findOne({ username: req.params.name })
+	res.render('profile', { targetUser })
+}))
 
 app.all('*', (req, res, next) => {
 	next(new expressError("Page Not Found", 404))

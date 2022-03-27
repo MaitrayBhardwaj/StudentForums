@@ -16,7 +16,12 @@
 		<a href="/#recent">Recent</a>
 		<a href="/#popular">Popular</a>
 		<a href="#" id="categoriesNav">Categories</a>
-		<a href="userProfile.html"><img src="/icons/user.png"></a>
+		<% if(user) { %>
+			<a href="/profile/<%= user.username %>"><img src="/icons/user.png"></a>
+		<% } else { %>
+			<a href="/signup" class="signupBtn">Sign Up</a>
+			<a href="/login" class="loginBtn">Log In</a>
+		<% } %>
 	</div>
 </nav>
 

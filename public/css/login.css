@@ -16,3 +16,15 @@
 	margin-left: 0.2em;
 	font-family: 'Roboto Condensed', sans-serif;
 }
+
+.signUp{
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+.signUp a{
+	color: #2D31FA;
+}
+
+.signUp a:hover{
+	text-decoration: underline;
+}
