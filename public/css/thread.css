@@ -59,3 +59,20 @@
 	margin: 1em;
 	font-family: 'Roboto Condensed', sans-serif;
 }
+
+.mutButton{
+	display: flex;
+	margin-bottom: 2em;
+}
+
+.mutButton a, .mutButton form button{
+	border: 0.01em solid #CCC;
+	padding: 0.4em;
+}
+
+.mutButton form button{
+	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 1em;
+	margin-left: 10px;
+	background-color: white;
+}

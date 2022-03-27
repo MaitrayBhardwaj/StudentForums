@@ -197,6 +197,44 @@ app.post('/signup', validateNewUser, wrapAsync(async (req, res, next) => {
 	}
 }))
 
+app.get('/post/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
+	const post = await Post.findById(req.params.id)
+	if(req.user._id.equals(post.author)){
+		return res.render('editPost', { post })
+	}
+	else{
+		req.flash('error', 'Slow down there, buddy! You can only edit your stuff.')
+		res.redirect(`/thread/${post.parentThread._id}`)
+	}
+}))
+
+app.patch('/post/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
+	const post = await Post.findById(req.params.id)
+	if(req.user._id.equals(post.author._id)){
+		post.postContent = req.body.postContent
+		post.modifiedAt = Date.now()
+		await post.save()
+		req.flash('success', 'Post edited successfully!')
+	}
+	else{
+		req.flash('error', 'You cannot edit the post which does not belong to you!')
+	}
+	res.redirect(`/thread/${post.parentThread._id}`)
+}))
+
+app.delete('/post/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
+	const post = await Post.findById(req.params.id)
+	const threadId = post.parentThread._id
+	if(post.author._id.equals(req.user._id)){
+		await Post.findByIdAndDelete(req.params.id)
+		req.flash('success', 'Successfully deleted your post!')
+	}
+	else{
+		req.flash('error', `Slow down there! You are NOT allowed to do that.`)
+	}
+	res.redirect(`/thread/${threadId}`)
+}))
+
 app.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login'}), wrapAsync(async (req, res, next) => {
 	const { username } = req.body
 	const redirectTo = req.session.returnTo || '/'
@@ -209,6 +247,12 @@ app.get('/profile/:name', wrapAsync(async (req, res, next) => {
 	const targetUser = await User.findOne({ username: req.params.name })
 	res.render('profile', { targetUser })
 }))
+
+app.get('/logout', isLoggedIn, (req, res) => {
+	req.logout()
+	req.flash('success', 'Logged out successfully!')
+	res.redirect('/')
+})
 
 app.all('*', (req, res, next) => {
 	next(new expressError("Page Not Found", 404))

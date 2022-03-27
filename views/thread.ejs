@@ -7,12 +7,20 @@
 
 		<div class="replies">
 		<% for(let post of posts) { %>
-		<div class="post">
-			<span><a href="/profile/<%= post.authorName %>"><%= post.authorName %></a> said:</span>
-			<div class="postContent">
-				<%= post.postContent %>
+			<div class="post">
+				<span><a href="/profile/<%= post.authorName %>"><%= post.authorName %></a> said:</span>
+				<div class="postContent">
+					<%= post.postContent %>
+				</div>
 			</div>
-		</div>
+			<% if(user && user.username === post.authorName) { %>
+				<div class="mutButton">
+					<a href="/post/<%= post._id %>/edit">Edit Post</a>
+					<form action="/post/<%= post._id %>?_method=DELETE" method="POST">
+						<button>Delete Post</button>
+					</form>
+				</div>
+			<% } %>
 		<% } %>
 	</div>
 
