@@ -5,7 +5,7 @@
 <div class="container">
 	<div class="formCont">
 		<h1>Editing your post</h1>
-		<form action="/post/<%= post._id %>?_method=PATCH" class="needs-validation" method="POST" novalidate>
+		<form action="/thread/<%= tID %>/post/<%= post._id %>?_method=PATCH" class="needs-validation" method="POST" novalidate>
 			<textarea name="postContent" cols="70" rows="15" placeholder="Your Post Here"><%= post.postContent %></textarea>
 			<button>Update</button>
 		</form>

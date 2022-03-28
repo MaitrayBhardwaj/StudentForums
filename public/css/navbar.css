@@ -147,7 +147,7 @@ div.right{
 }
 
 .loginBtn{
-	margin-left: 0;
+	margin-left: 0 !important;
 }
 
 .signupBtn:hover, .loginBtn:hover{

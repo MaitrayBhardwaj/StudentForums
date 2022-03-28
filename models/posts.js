@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const Thread = require('./threads')
-const User = require('./users')
 
 const postSchema = new mongoose.Schema({
 	author: {
@@ -31,16 +29,17 @@ const postSchema = new mongoose.Schema({
 	}
 })
 
-// postSchema.post('findOneAndDelete', async function (data) {
-// 	const { parentThread, author } = await Thread.findById(data.parentThread).populate('posts').populate('author')
-// 	for(let i = 0; i < posts.length; i++){
-// 		if(posts[i]._id.equals(data._id)){
-// 			posts.splice(i, 1)
-// 			break
-// 		}
-// 	}
-// 	author.postCount = author.postCount - 1
-// 	await author.save()
-// })
+postSchema.post('findOneAndDelete', async function (data) {
+	const Thread = require('./threads')
+	const User = require('./users')
+
+	console.log(data)
+	const parentThread = await Thread.findById(data.parentThread).populate('posts')
+	parentThread.posts.pull(data._id)
+	await parentThread.save()
+	const author = await User.findById(data.author)
+	author.postCount = author.postCount - 1
+	await author.save()
+})
 
 module.exports = mongoose.model('Post', postSchema)

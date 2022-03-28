@@ -25,7 +25,11 @@
 	</div>
 </nav>
 
+<% if(user) { %>
 <div class="catsNav">
+<% } else { %>
+<div class="catsNav" style="right: 19%;">
+<% } %>
 	<li><a href="/category/General%20Discussion">General Discussion</a></li>
 	<li><a href="/category/Resources">Resources</a></li>
 	<li><a href="/category/Doubt%20Solving">Doubt Solving</a></li>

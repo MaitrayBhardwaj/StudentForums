@@ -26,7 +26,7 @@
 						<span>Posts</span>
 					</div>
 					<div class="userInfo">
-						<div class="ogPoster">By <a href="/profile/<%= recThread.OPName %>"><%= recThread.OPName %></a></div>
+						<div class="ogPoster">By <a href="/profile/<%= recThread.posts[recThread.posts.length - 1].authorName %>"><%= recThread.posts[recThread.posts.length - 1].authorName %></a></div>
 						<div class="timeCreated"><%= recThread.lastModified.toISOString().substring(0, 10) %>  <%= recThread.lastModified.getUTCHours() %>:<%= recThread.lastModified.getUTCMinutes() > 10 ? '' : '0' %><%= recThread.lastModified.getUTCMinutes() %> </a></div>
 					</div>
 				</li>

@@ -78,7 +78,7 @@ passport.deserializeUser(User.deserializeUser())
 
 app.get('/', wrapAsync(async (req, res, next) => {
 	const categories = await Category.find({})
-	const recThreads = await Thread.find({}).sort({ lastModified: -1 }).limit(5)
+	const recThreads = await Thread.find({}).sort({ lastModified: -1 }).populate('posts').limit(5)
 	const popThreads = await Thread.aggregate(
 	    [
 	        { "$project": {
@@ -99,10 +99,23 @@ app.get('/', wrapAsync(async (req, res, next) => {
 	res.render('home', { recThreads, popThreads, categories })
 }))
 
+app.get('/thread/:tID/post/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
+	const { posts } = await Thread.findById(req.params.tID).populate('posts')
+	console.log(posts)
+	const [ post ] = posts.filter(e => e._id.equals(req.params.id))
+	console.log(post)
+	if(req.user._id.equals(post.author)){
+		return res.render('editPost', { tID: req.params.tID, post })
+	}
+	else{
+		req.flash('error', 'Slow down there, buddy! You can only edit your stuff.')
+		res.redirect(`/thread/${req.params.tID}`)
+	}
+}))
+
 app.get('/thread/:id', wrapAsync(async (req, res, next) => {
-	const thread = await Thread.findById(req.params.id)
-	const { posts } = await thread.populate('posts')
-	res.render('thread', { thread, posts })
+	const thread = await Thread.findById(req.params.id).populate('posts')
+	res.render('thread', { thread })
 }))
 
 app.post('/thread/:id', isLoggedIn, validateNewPost, wrapAsync(async (req, res, next) => {
@@ -113,6 +126,9 @@ app.post('/thread/:id', isLoggedIn, validateNewPost, wrapAsync(async (req, res, 
 	newPost.author = user
 	newPost.authorName = user.username
 	await newPost.save()
+	const poster = await User.findById(user._id)
+	poster.postCount = poster.postCount + 1
+	await poster.save()
 	thread.lastModified = Date.now()
 	thread.posts.push(newPost)
 	await thread.save()
@@ -197,20 +213,9 @@ app.post('/signup', validateNewUser, wrapAsync(async (req, res, next) => {
 	}
 }))
 
-app.get('/post/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
+app.patch('/thread/:tid/post/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
 	const post = await Post.findById(req.params.id)
 	if(req.user._id.equals(post.author)){
-		return res.render('editPost', { post })
-	}
-	else{
-		req.flash('error', 'Slow down there, buddy! You can only edit your stuff.')
-		res.redirect(`/thread/${post.parentThread._id}`)
-	}
-}))
-
-app.patch('/post/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
-	const post = await Post.findById(req.params.id)
-	if(req.user._id.equals(post.author._id)){
 		post.postContent = req.body.postContent
 		post.modifiedAt = Date.now()
 		await post.save()
@@ -219,12 +224,11 @@ app.patch('/post/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
 	else{
 		req.flash('error', 'You cannot edit the post which does not belong to you!')
 	}
-	res.redirect(`/thread/${post.parentThread._id}`)
+	res.redirect(`/thread/${req.params.tid}`)
 }))
 
-app.delete('/post/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
+app.delete('/thread/:tid/post/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
 	const post = await Post.findById(req.params.id)
-	const threadId = post.parentThread._id
 	if(post.author._id.equals(req.user._id)){
 		await Post.findByIdAndDelete(req.params.id)
 		req.flash('success', 'Successfully deleted your post!')
@@ -232,7 +236,7 @@ app.delete('/post/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
 	else{
 		req.flash('error', `Slow down there! You are NOT allowed to do that.`)
 	}
-	res.redirect(`/thread/${threadId}`)
+	res.redirect(`/thread/${req.params.tid}`)
 }))
 
 app.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login'}), wrapAsync(async (req, res, next) => {

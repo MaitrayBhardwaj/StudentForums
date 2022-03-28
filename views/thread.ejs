@@ -6,7 +6,7 @@
 	<h1><%= thread.title %></h1>
 
 		<div class="replies">
-		<% for(let post of posts) { %>
+		<% for(let post of thread.posts) { %>
 			<div class="post">
 				<span><a href="/profile/<%= post.authorName %>"><%= post.authorName %></a> said:</span>
 				<div class="postContent">
@@ -15,8 +15,8 @@
 			</div>
 			<% if(user && user.username === post.authorName) { %>
 				<div class="mutButton">
-					<a href="/post/<%= post._id %>/edit">Edit Post</a>
-					<form action="/post/<%= post._id %>?_method=DELETE" method="POST">
+					<a href="/thread/<%= thread._id %>/post/<%= post._id %>/edit">Edit Post</a>
+					<form action="/thread/<%= thread._id %>/post/<%= post._id %>?_method=DELETE" method="POST">
 						<button>Delete Post</button>
 					</form>
 				</div>
