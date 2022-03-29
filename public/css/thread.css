@@ -8,8 +8,28 @@
 	border-bottom: 0.01em solid #CCC;
 }
 
-.ogPost a, .post a{
+.ogPost a, .authorLink{
 	color: blue;
+}
+
+.post{
+	border: 0.01em solid #CCC;
+	margin-bottom: 1em;
+}
+
+.post div:first-child{
+	padding: 0.6em;
+	display: flex;
+	border-bottom: 0.01em solid #CCC;
+}
+
+.author{
+	justify-self: flex-start;
+}
+
+.time{
+	margin-left: auto;
+	justify-self: flex-end;
 }
 
 .postContent{
@@ -61,8 +81,10 @@
 }
 
 .mutButton{
+	align-self: flex-end;
 	display: flex;
-	margin-bottom: 2em;
+	margin-top: -0.5em;
+	margin-bottom: 0.5em;
 }
 
 .mutButton a, .mutButton form button{
@@ -70,9 +92,20 @@
 	padding: 0.4em;
 }
 
+.mutButton a{
+	margin-left: auto;
+}
+
 .mutButton form button{
 	font-family: 'Roboto Condensed', sans-serif;
 	font-size: 1em;
 	margin-left: 10px;
+	margin-right: 10px;
 	background-color: white;
+}
+
+.lastModif{
+	border-bottom: 0 !important;
+	font-style: italic;
+	margin: -0.75em !important;
 }

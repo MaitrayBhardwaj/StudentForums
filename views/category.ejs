@@ -12,6 +12,7 @@
 </style>
 
 <div class="container">
+	<% if(category) { %>
 	<h1><%= category.name %></h1>
 	<p><%= category.desc %></p>
 
@@ -38,4 +39,5 @@
 			</ul>
 		</div>
 	</div>
+	<% } %>
 </div>

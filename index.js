@@ -96,16 +96,14 @@ app.get('/', wrapAsync(async (req, res, next) => {
 	    	return results
 	    }
 	)
-	res.render('home', { recThreads, popThreads, categories })
+	res.render('home', { recThreads, popThreads, categories, pageTitle: 'StuFor - Where Students Gather' })
 }))
 
 app.get('/thread/:tID/post/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
 	const { posts } = await Thread.findById(req.params.tID).populate('posts')
-	console.log(posts)
 	const [ post ] = posts.filter(e => e._id.equals(req.params.id))
-	console.log(post)
 	if(req.user._id.equals(post.author)){
-		return res.render('editPost', { tID: req.params.tID, post })
+		return res.render('editPost', { tID: req.params.tID, post, pageTitle: `Editing your post` })
 	}
 	else{
 		req.flash('error', 'Slow down there, buddy! You can only edit your stuff.')
@@ -115,7 +113,7 @@ app.get('/thread/:tID/post/:id/edit', isLoggedIn, wrapAsync(async (req, res, nex
 
 app.get('/thread/:id', wrapAsync(async (req, res, next) => {
 	const thread = await Thread.findById(req.params.id).populate('posts')
-	res.render('thread', { thread })
+	res.render('thread', { thread, pageTitle: `${thread.title}` })
 }))
 
 app.post('/thread/:id', isLoggedIn, validateNewPost, wrapAsync(async (req, res, next) => {
@@ -125,6 +123,7 @@ app.post('/thread/:id', isLoggedIn, validateNewPost, wrapAsync(async (req, res, 
 	newPost.parentThread = thread
 	newPost.author = user
 	newPost.authorName = user.username
+	newPost.createdAt = Date.now()
 	await newPost.save()
 	const poster = await User.findById(user._id)
 	poster.postCount = poster.postCount + 1
@@ -140,12 +139,15 @@ app.get('/category/:catName', wrapAsync(async (req, res, next) => {
 	const { catName } = req.params
 	const category = await Category.findOne({ name: catName })
 	const threads = await Thread.find({ category: catName }).sort({ lastModified: -1 }).limit(10)
-	res.render('category', { category, threads })
+	res.render('category', { category, threads, pageTitle: `Browsing ${catName}` })
 }))
 
 app.get('/category/:catName/new', wrapAsync(async (req, res, next) => {
 	const category = await Category.findOne({ name: req.params.catName })
-	res.render('newThread', { category })
+	if(!category){
+		next(new expressError("Page Not Found", 404))
+	}
+	res.render('newThread', { category, pageTitle: `Add a Thread in ${req.params.catName}` })
 }))
 
 app.post('/category/:catName/new', isLoggedIn, validateNewThread, wrapAsync(async (req, res, next) => {
@@ -185,15 +187,15 @@ app.get('/search', wrapAsync(async (req, res, next) => {
 	else{
 		results = await Thread.find({ "title": { $regex : regex}, "OPName": user})
 	}
-	res.render('search', { results, q, user })
+	res.render('search', { results, q, user, pageTitle: `Search - Forums` })
 }))
 
 app.get('/signup', (req, res) => {
-	res.render('register')
+	res.render('register', { pageTitle: 'Sign Up' })
 })
 
 app.get('/login', (req, res) => {
-	res.render('login')
+	res.render('login', { pageTitle: 'Login' })
 })
 
 app.post('/signup', validateNewUser, wrapAsync(async (req, res, next) => {
@@ -217,7 +219,10 @@ app.patch('/thread/:tid/post/:id', isLoggedIn, wrapAsync(async (req, res, next) 
 	const post = await Post.findById(req.params.id)
 	if(req.user._id.equals(post.author)){
 		post.postContent = req.body.postContent
-		post.modifiedAt = Date.now()
+		const modif = Date.now()
+		if(modif - post.createdAt >= (1000 * 60 * 2)){
+			post.modifiedAt = modif
+		}
 		await post.save()
 		req.flash('success', 'Post edited successfully!')
 	}
@@ -249,7 +254,7 @@ app.post('/login', passport.authenticate('local', { failureFlash: true, failureR
 
 app.get('/profile/:name', wrapAsync(async (req, res, next) => {
 	const targetUser = await User.findOne({ username: req.params.name })
-	res.render('profile', { targetUser })
+	res.render('profile', { targetUser, pageTitle: `${req.params.name}'s Profile` })
 }))
 
 app.get('/logout', isLoggedIn, (req, res) => {
@@ -264,7 +269,7 @@ app.all('*', (req, res, next) => {
 
 app.use((err, req, res, next) => {
 	const { status = 500, message } = err
-	res.status(status).render('error', { message, status })
+	res.status(status).render('error', { message, status, pageTitle: `Error ${status}` })
 })
 
 app.listen(3000, () => {

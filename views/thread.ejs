@@ -2,25 +2,29 @@
 
 <link rel="stylesheet" href="/css/thread.css">
 
+<% const formatter = new Intl.DateTimeFormat('en-us', { month: 'long' }) %>
+
 <div class="container">
 	<h1><%= thread.title %></h1>
 
 		<div class="replies">
-		<% for(let post of thread.posts) { %>
+		<% const posts = thread.posts %>
+		<% for(let i = 0; i < posts.length; i++) { %>
 			<div class="post">
-				<span><a href="/profile/<%= post.authorName %>"><%= post.authorName %></a> said:</span>
+				<div><span class="author"><a class="authorLink" href="/profile/<%= posts[i].authorName %>"><%= posts[i].authorName %></a> said:</span> <span class="time"><%= posts[i].createdAt.toISOString().substring(8, 10) %> <%= formatter.format(posts[i].createdAt) %> <%= posts[i].createdAt.toISOString().substring(0, 4) %> <%= posts[i].createdAt.toISOString().substring(11,19) %></span></div>
 				<div class="postContent">
-					<%= post.postContent %>
-				</div>
-			</div>
-			<% if(user && user.username === post.authorName) { %>
+					<%= posts[i].postContent %><% if(posts[i].modifiedAt) { %>
+					<div class="lastModif">
+						Last modified on <%= posts[i].modifiedAt.toISOString().substring(8, 10) %> <%= formatter.format(posts[i].modifiedAt) %> <%= posts[i].modifiedAt.toISOString().substring(0, 4) %>, <%= posts[i].modifiedAt.toISOString().substring(11,19) %></div><% } %></div>
+			<% if(user && user.username === posts[i].authorName && i !== 0) { %>
 				<div class="mutButton">
-					<a href="/thread/<%= thread._id %>/post/<%= post._id %>/edit">Edit Post</a>
-					<form action="/thread/<%= thread._id %>/post/<%= post._id %>?_method=DELETE" method="POST">
+					<a href="/thread/<%= thread._id %>/post/<%= posts[i]._id %>/edit">Edit Post</a>
+					<form action="/thread/<%= thread._id %>/post/<%= posts[i]._id %>?_method=DELETE" method="POST">
 						<button>Delete Post</button>
 					</form>
 				</div>
 			<% } %>
+			</div>
 		<% } %>
 	</div>
 
