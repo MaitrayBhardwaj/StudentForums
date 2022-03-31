@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema({
 	aboutMe: {
 		type: String,
 		minLength: 0,
-		maxLength: 10000
+		maxLength: 10000,
+		default: ''
 	}
 })
 

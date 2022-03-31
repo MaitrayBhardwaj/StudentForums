@@ -12,6 +12,11 @@
 	<div class="threads">
 		<div class="searchResults">
 			<h1>Search Results</h1>
+			<% if(results && results.length === 0) { %>
+				<div class="flashMessage errorFlash" style="margin: 1em 0.2em; text-align: center;">
+					No search results found.
+				</div>
+			<% } %>
 			<ul class="resThreads">
 				<% for(let thread of results) { %>
 				<li>

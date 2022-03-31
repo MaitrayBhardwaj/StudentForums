@@ -23,7 +23,7 @@
 
 		<% if(user && user.username === targetUser.username) { %>
 		<div class="editProf">
-			<button>Profile Settings</button>
+			<a href="/profile/<%= user.username %>/edit">Profile Settings</a>
 			<a href="/logout">Logout</a>
 		</div>
 		<% } %>

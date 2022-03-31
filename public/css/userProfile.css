@@ -53,6 +53,7 @@
 
 .aboutMe{
 	margin: 1em 0;
+	white-space: pre-line;
 }
 
 .isOnline{
@@ -67,10 +68,11 @@
 }
 
 .editProf{
+	margin-top: 2em;
 	justify-self: flex-end;
 }
 
-.editProf button, .editProf a{
+.editProf a{
 	padding: 0.5em;
 	border: 0.01em solid #CCC;
 	background-color: white;

@@ -38,7 +38,7 @@ const threadSchema = new mongoose.Schema({
 
 threadSchema.post('findOneAndDelete', async (data) => {
 	for(let post of data.posts){
-		Post.findByIdAndDelete(post._id)
+		await post.remove()
 	}
 })
 

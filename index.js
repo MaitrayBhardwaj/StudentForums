@@ -178,7 +178,7 @@ app.post('/category/:catName/new', isLoggedIn, validateNewThread, wrapAsync(asyn
 }))
 
 app.get('/search', wrapAsync(async (req, res, next) => {
-	const { q, user } = req.query
+	const { q = '', user } = req.query
 	const regex = new RegExp(q, 'i')
 	let results = []
 	if(!user){
@@ -262,6 +262,30 @@ app.get('/logout', isLoggedIn, (req, res) => {
 	req.flash('success', 'Logged out successfully!')
 	res.redirect('/')
 })
+
+app.get('/profile/:username/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
+	const targetUser = await User.findOne({ username: req.params.username })
+	if(targetUser._id.equals(req.user._id)){
+		res.render('editProfile', { targetUser, pageTitle: 'Edit your profile' })
+	}
+	else{
+		req.flash('error', 'Whoa! Slow down buddy. You can only edit your own profile.')
+		res.redirect(`/profile/${req.params.username}`)
+	}
+}))
+
+app.patch('/profile/:username', isLoggedIn, wrapAsync(async (req, res, next) => {
+	const targetUser = await User.findOne({ username: req.params.username })
+	if(targetUser._id.equals(req.user._id)){
+		targetUser.aboutMe = req.body.aboutMe
+		await targetUser.save()
+		req.flash('success', 'Updated About Me successfully!')
+	}
+	else{
+		req.flash('error', `You don't have the permissions to do that!`)
+	}
+	res.redirect(`/profile/${req.params.username}`)
+}))
 
 app.all('*', (req, res, next) => {
 	next(new expressError("Page Not Found", 404))

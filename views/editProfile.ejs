@@ -1,0 +1,13 @@
+<% layout('layouts/boilerplate.ejs') %>
+
+<link rel="stylesheet" href="/css/newThread.css">
+
+<div class="container">
+	<div class="formCont">
+		<h1>Edit Your About Me</h1>
+		<form action="/profile/<%= targetUser.username %>?_method=PATCH" class="needs-validation" method="POST" novalidate>
+			<textarea name="aboutMe" cols="70" rows="15" placeholder="Your Bio Here"><%= targetUser.aboutMe %></textarea>
+			<button>Update</button>
+		</form>
+	</div>
+</div>
