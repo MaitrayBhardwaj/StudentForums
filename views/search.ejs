@@ -27,7 +27,7 @@
 					</div>
 					<div class="userInfo">
 						<div class="ogPoster">By <a href="userProfile.html"><%= thread.OPName %></a></div>
-						<div class="timeCreated"><%= thread.createdAt.toISOString().substring(0, 10) %>  <%= thread.createdAt.getUTCHours() %>:<%= thread.createdAt.getUTCMinutes() > 10 ? '' : '0' %><%= thread.createdAt.getUTCMinutes() %></a></div>
+						<div class="timeCreated"><%= thread.createdAt.toLocaleString('en-US', { timezone: 'IST' }) %></a></div>
 					</div>
 				</li>
 				<% } %>

@@ -4,8 +4,8 @@
 
 <div class="container">
 	<div class="formCont">
-		<h1>Start a new thread in <%= category.name %>!</h1>
-		<form action="/category/<%= category.name %>/new" class="needs-validation" method="POST" novalidate>
+		<h1>Start a new thread in <%= catName %>!</h1>
+		<form action="/category/<%= catName %>/new" class="needs-validation" method="POST" novalidate>
 			<input type="text" placeholder="Thread Title" name="title" required>
 			<textarea name="postContent" cols="70" rows="15" placeholder="Your Post Here"></textarea>
 			<button>Submit</button>

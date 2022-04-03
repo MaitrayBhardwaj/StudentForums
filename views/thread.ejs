@@ -11,11 +11,11 @@
 		<% const posts = thread.posts %>
 		<% for(let i = 0; i < posts.length; i++) { %>
 			<div class="post">
-				<div><span class="author"><a class="authorLink" href="/profile/<%= posts[i].authorName %>"><%= posts[i].authorName %></a> said:</span> <span class="time"><%= posts[i].createdAt.toISOString().substring(8, 10) %> <%= formatter.format(posts[i].createdAt) %> <%= posts[i].createdAt.toISOString().substring(0, 4) %> <%= posts[i].createdAt.toISOString().substring(11,19) %></span></div>
+				<div><span class="author"><a class="authorLink" href="/profile/<%= posts[i].authorName %>"><%= posts[i].authorName %></a> said:</span> <span class="time"><%= posts[i].createdAt.toISOString().substring(8, 10) %> <%= formatter.format(posts[i].createdAt) %> <%= posts[i].createdAt.toISOString().substring(0, 4) %>, <%= posts[i].createdAt.toLocaleString('en-US', { timezone: 'IST' }).substring(10) %></span></div>
 				<div class="postContent">
 					<%= posts[i].postContent %><% if(posts[i].modifiedAt) { %>
 					<div class="lastModif">
-						Last modified on <%= posts[i].modifiedAt.toISOString().substring(8, 10) %> <%= formatter.format(posts[i].modifiedAt) %> <%= posts[i].modifiedAt.toISOString().substring(0, 4) %>, <%= posts[i].modifiedAt.toISOString().substring(11,19) %></div><% } %></div>
+						Last modified on <%= posts[i].modifiedAt.toISOString().substring(8, 10) %> <%= formatter.format(posts[i].modifiedAt) %> <%= posts[i].modifiedAt.toISOString().substring(0, 4) %>, <%= posts[i].modifiedAt.toLocaleString('en-US', { timezone: 'IST' }).substring(10) %></div><% } %></div>
 			<% if(user && user.username === posts[i].authorName && i !== 0) { %>
 				<div class="mutButton">
 					<a href="/thread/<%= thread._id %>/post/<%= posts[i]._id %>/edit">Edit Post</a>

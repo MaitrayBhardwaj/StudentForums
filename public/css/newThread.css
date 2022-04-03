@@ -36,11 +36,13 @@
 }
 
 .formCont form button{
-	background-color: white;
-	transition: background-color 0.1s ease-in-out;
+	color: white;
+	background-color: #1C6DD0;
+	transition: background-color 0.1s color 0.1s ease-in-out;
 }
 
 .formCont form button:hover{
+	color: black;
 	background-color: #DDD;
 }
 

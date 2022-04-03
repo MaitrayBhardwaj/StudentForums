@@ -6,11 +6,7 @@ const catSchema = new mongoose.Schema({
 	},
 	desc: {
 		type: String
-	},
-	recThreads: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Thread'
-	}]
+	}
 })
 
 module.exports = mongoose.model('Category', catSchema)

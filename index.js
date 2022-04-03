@@ -76,9 +76,11 @@ passport.use(new passportLocal(User.authenticate()))
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
+const allCategories = ['General Discussion', 'Doubt Solving', 'Consultation', 'Resources', 'Support', 'Miscellaneous']
+
 app.get('/', wrapAsync(async (req, res, next) => {
-	const categories = await Category.find({})
-	const recThreads = await Thread.find({}).sort({ lastModified: -1 }).populate('posts').limit(5)
+	const categories = await Category.find({}).select('-recThreads')
+	const recThreads = await Thread.find({}).sort({ lastModified: -1 }).populate('posts').limit(5).select('title posts _id lastModified').lean()
 	const popThreads = await Thread.aggregate(
 	    [
 	        { "$project": {
@@ -100,7 +102,7 @@ app.get('/', wrapAsync(async (req, res, next) => {
 }))
 
 app.get('/thread/:tID/post/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
-	const { posts } = await Thread.findById(req.params.tID).populate('posts')
+	const { posts } = await Thread.findById(req.params.tID).populate('posts').select('posts')
 	const [ post ] = posts.filter(e => e._id.equals(req.params.id))
 	if(req.user._id.equals(post.author)){
 		return res.render('editPost', { tID: req.params.tID, post, pageTitle: `Editing your post` })
@@ -112,20 +114,23 @@ app.get('/thread/:tID/post/:id/edit', isLoggedIn, wrapAsync(async (req, res, nex
 }))
 
 app.get('/thread/:id', wrapAsync(async (req, res, next) => {
-	const thread = await Thread.findById(req.params.id).populate('posts')
+	const thread = await Thread.findById(req.params.id).populate('posts').select('title posts').lean()
+	if(!thread){
+		return next(new expressError("Page Not Found", 404))
+	}
 	res.render('thread', { thread, pageTitle: `${thread.title}` })
 }))
 
 app.post('/thread/:id', isLoggedIn, validateNewPost, wrapAsync(async (req, res, next) => {
 	const user = req.user
 	const newPost = new Post(req.body)
-	const thread = await Thread.findById(req.params.id)
-	newPost.parentThread = thread
+	const thread = await Thread.findById(req.params.id).select('lastModified posts _id')
+	newPost.parentThread = thread._id
 	newPost.author = user
 	newPost.authorName = user.username
 	newPost.createdAt = Date.now()
 	await newPost.save()
-	const poster = await User.findById(user._id)
+	const poster = await User.findById(user._id).select('postCount')
 	poster.postCount = poster.postCount + 1
 	await poster.save()
 	thread.lastModified = Date.now()
@@ -138,37 +143,43 @@ app.post('/thread/:id', isLoggedIn, validateNewPost, wrapAsync(async (req, res, 
 app.get('/category/:catName', wrapAsync(async (req, res, next) => {
 	const { catName } = req.params
 	const category = await Category.findOne({ name: catName })
-	const threads = await Thread.find({ category: catName }).sort({ lastModified: -1 }).limit(10)
+	const threads = await Thread.find({ category: catName }).sort({ lastModified: -1 }).limit(10).select('title posts _id lastModified OPName').lean()
 	res.render('category', { category, threads, pageTitle: `Browsing ${catName}` })
 }))
 
 app.get('/category/:catName/new', wrapAsync(async (req, res, next) => {
-	const category = await Category.findOne({ name: req.params.catName })
-	if(!category){
-		next(new expressError("Page Not Found", 404))
+	const catName = req.params.catName
+	if(!allCategories.includes(catName)){
+		return next(new expressError("Page Not Found", 404))
 	}
-	res.render('newThread', { category, pageTitle: `Add a Thread in ${req.params.catName}` })
+	res.render('newThread', { catName, pageTitle: `Add a Thread in ${catName}` })
 }))
 
 app.post('/category/:catName/new', isLoggedIn, validateNewThread, wrapAsync(async (req, res, next) => {
-	const category = await Category.findOne({ name: req.params.catName })
+	const catName = req.params.catName
+	if(!allCategories.includes(catName)){
+		return next(new expressError("Page Not Found", 404))
+	}
+
 	const user = req.user;
 	const { title, postContent } = req.body
 	const newThread = new Thread({ title, OP: user, OPName: user.username })
 	const newPost = new Post({ postContent, author: user, authorName: user.username })
 	newThread.lastModified = Date.now()
 	newThread.createdAt = Date.now()
-	newThread.category = req.params.catName
-	await newThread.save()
+	newPost.createdAt = Date.now()
+	newThread.category = catName
 	newPost.parentThread = newThread
+	await newThread.save()
 	try{
 		await newPost.save()
 	}
 	catch(err){
-		await Thread.findByIdAndDelete(newThread._id)
-		res.redirect(`/category/${req.params.catName}/new`)
+		await newThread.remove()
+		req.flash('error', 'Internal server error. Please try later.')
+		res.redirect(`/category/${catName}/new`)
 	}
-	const poster = await User.findById(user._id)
+	const poster = await User.findById(user._id).select('postCount')
 	poster.postCount = poster.postCount + 1
 	await poster.save()
 	newThread.posts.push(newPost)
@@ -182,10 +193,10 @@ app.get('/search', wrapAsync(async (req, res, next) => {
 	const regex = new RegExp(q, 'i')
 	let results = []
 	if(!user){
-		results = await Thread.find({ "title": { $regex : regex } })
+		results = await Thread.find({ "title": { $regex : regex } }).select('title posts _id createdAt OPName').lean()
 	}
 	else{
-		results = await Thread.find({ "title": { $regex : regex}, "OPName": user})
+		results = await Thread.find({ "title": { $regex : regex}, "OPName": user}).select('title posts _id createdAt OPName').lean()
 	}
 	res.render('search', { results, q, user, pageTitle: `Search - Forums` })
 }))
@@ -254,6 +265,9 @@ app.post('/login', passport.authenticate('local', { failureFlash: true, failureR
 
 app.get('/profile/:name', wrapAsync(async (req, res, next) => {
 	const targetUser = await User.findOne({ username: req.params.name })
+	if(!targetUser){
+		return next(new expressError("No user with that username found.", 404))
+	}
 	res.render('profile', { targetUser, pageTitle: `${req.params.name}'s Profile` })
 }))
 
