@@ -28,14 +28,16 @@
 		<% } %>
 	</div>
 
-	<form action="/thread/<%= thread._id %>" method="POST" class="needs-validation" id="newPost" novalidate>
-		<textarea name="postContent" id="newPostCont" cols="60" rows="10"></textarea>
-		<div class="postBtns">
-			<button id="submitPost">Submit</button>
-			<button type="button" id="cancelPost">Cancel</button>
-		</div>
-	</form>
-	<button class="addPost">Add a Post</button>
+	<% if(user) { %>
+		<form action="/thread/<%= thread._id %>" method="POST" class="needs-validation" id="newPost" novalidate>
+			<textarea name="postContent" id="newPostCont" cols="60" rows="10"></textarea>
+			<div class="postBtns">
+				<button id="submitPost">Submit</button>
+				<button type="button" id="cancelPost">Cancel</button>
+			</div>
+		</form>
+		<button class="addPost">Add a Post</button>
+	<% } %>
 </div>
 
 <script src="/js/thread.js"></script>
