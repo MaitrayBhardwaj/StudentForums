@@ -31,7 +31,7 @@
 						<span>Posts</span>
 					</div>
 					<div class="userInfo">
-						<div class="ogPoster">By <a href="userProfile.html"><%= thread.OPName %></a></div>
+						<div class="ogPoster">By <a href="/profile/<%= thread.OPName %>"><%= thread.OPName %></a></div>
 						<div class="timeCreated"><%= thread.lastModified.toLocaleString('en-US', { timezone: 'IST' }) %></a></div>
 					</div>
 				</li>

@@ -16,7 +16,7 @@
 		<a href="/#recent">Recent</a>
 		<a href="/#popular">Popular</a>
 		<a href="#" id="categoriesNav">Categories</a>
-		<% if(user) { %>
+		<% if(user !== undefined) { %>
 			<a href="/profile/<%= user.username %>"><img src="/icons/user.png"></a>
 		<% } else { %>
 			<a href="/signup" class="signupBtn">Sign Up</a>
