@@ -60,10 +60,14 @@ body{
 	white-space: pre-line;
 }
 
-.isOnline{
+.isCreator{
 	display: flex;
-	color: green;
 	align-items: center;
+	background-color: crimson;
+	color: white;
+	margin-top: -10px;
+	margin-bottom: 20px;
+	padding: 0.5em 1em;
 }
 
 .dot{

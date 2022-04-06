@@ -1,12 +1,18 @@
+require('dotenv').config()
+
 const mongoose = require('mongoose')
 const Category = require('../models/categories')
 
-mongoose.connect('mongodb://localhost:27017/StuFor')
+const dbUrl = process.env.dbUrl
+console.log(dbUrl)
+
+mongoose.connect(dbUrl)
 	.then(() => {
 		console.log('Connected to the database')
 	})
-	.catch(() => {
+	.catch((err) => {
 		console.log('Unable to connect to the database')
+		console.log(err)
 	})
 
 const categories = ['General Discussion', 'Resources', 'Doubt Solving', 'Consultation', 'Miscellaneous', 'Support']
@@ -22,9 +28,9 @@ const desc = [
 const fillCat = async () => {
 	for(let i = 0; i < categories.length; i++){
 		await Category.insertMany([{
-			name: categories[i],
-			desc: desc[i]
-		}])
+					name: categories[i],
+					desc: desc[i]
+			}])
 	}
 }
 

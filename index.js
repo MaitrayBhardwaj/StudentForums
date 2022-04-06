@@ -9,6 +9,9 @@ const session = require('express-session')
 const flash = require('connect-flash')
 const passport = require('passport')
 const passportLocal = require('passport-local')
+const mongoSanitize = require('express-mongo-sanitize')
+const helmet = require('helmet')
+const mongoStore = require('connect-mongo')
 
 const Thread = require('./models/threads')
 const Post = require('./models/posts')
@@ -21,7 +24,12 @@ const validateNewPost = require('./utils/validateNewPost')
 const validateNewUser = require('./utils/validateNewUser')
 const expressError = require('./utils/expressError')
 
-mongoose.connect('mongodb://localhost:27017/StuFor')
+const dbUrlProd = process.env.dbUrl
+const dbUrlDev = 'mongodb://localhost:27017/StuFor'
+
+const dbUrl = dbUrlProd
+
+mongoose.connect(dbUrl)
 	.then(() => {
 		console.log('Connected to the database')
 	})
@@ -31,6 +39,16 @@ mongoose.connect('mongodb://localhost:27017/StuFor')
 
 const app = express()
 
+const store = mongoStore.create({
+	mongoUrl: dbUrl,
+	secret: process.env.sessionSecret,
+	touchAfter: 24 * 3600
+})
+
+store.on('error', (err) => {
+	console.log('Session error', err)
+})
+
 app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, '/public')))
 app.use(express.urlencoded({ extended: true }))
@@ -39,13 +57,17 @@ app.use(session({
 	secret: process.env.sessionSecret,
 	resave: false,
 	saveUninitialized: true,
+	store,
 	cookie: {
 		httpOnly: true,
+		// secure: true,
 		expires: Date.now() + 1000 * 60 * 60 * 24 * 14,
 		maxAge: 1000 * 60 * 60 * 24 * 14
 	}
 }))
 
+app.use(helmet({ contentSecurityPolicy: false }))
+app.use(mongoSanitize())
 app.use(passport.initialize())
 app.use(passport.session())
 app.use((req, res, next) => {
@@ -56,6 +78,7 @@ app.use((req, res, next) => {
 	res.locals.info = req.flash('info')
 	next()
 })
+
 
 const isLoggedIn = (req, res, next) => {
 	if(!req.isAuthenticated()){
