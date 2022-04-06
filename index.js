@@ -333,6 +333,8 @@ app.use((err, req, res, next) => {
 	res.status(status).render('error', { message, status, pageTitle: `Error ${status}` })
 })
 
-app.listen(3000, () => {
-	console.log('Connection active on Port 3000')
+const port = process.env.PORT || 3000
+
+app.listen(port, () => {
+	console.log(`Connection active on Port ${port}`)
 })
