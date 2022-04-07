@@ -96,7 +96,7 @@ const isAdmin = async (req, res, next) => {
 	const isAdmin = await User.findById(req.user._id).select('isAdmin').lean()
 	req.user.isAdmin = isAdmin
 	next()
-} 
+}
 
 app.engine('ejs', ejsMate)
 app.set('views', path.join(__dirname, '/views'))
