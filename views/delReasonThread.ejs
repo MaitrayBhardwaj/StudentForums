@@ -1,0 +1,15 @@
+<% layout('layouts/boilerplate.ejs') %>
+
+<link rel="stylesheet" href="/css/newThread.css">
+
+<div class="container">
+	<div class="formCont">
+		<h1>Provide a reason for the deletion</h1>
+		<form action="/thread/<%= tid %>?_method=DELETE" class="needs-validation" method="POST" novalidate>
+			<textarea name="delReason" cols="70" rows="15" placeholder="Reason for deletion here"></textarea>
+			<button>Confirm Deletion</button>
+		</form>
+	</div>
+</div>
+
+<script src="/js/newPostValidation.js"></script>

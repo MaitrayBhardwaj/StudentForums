@@ -17,6 +17,7 @@ const Thread = require('./models/threads')
 const Post = require('./models/posts')
 const User = require('./models/users')
 const Category = require('./models/categories')
+const DelLogs = require('./models/delLogs')
 
 const wrapAsync = require('./utils/wrapAsync')
 const validateNewThread = require('./utils/validateNewThread')
@@ -27,7 +28,7 @@ const expressError = require('./utils/expressError')
 const dbUrlProd = process.env.dbUrl
 const dbUrlDev = 'mongodb://localhost:27017/StuFor'
 
-const dbUrl = dbUrlProd
+const dbUrl = dbUrlProd || dbUrlDev
 
 mongoose.connect(dbUrl)
 	.then(() => {
@@ -70,6 +71,7 @@ app.use(helmet({ contentSecurityPolicy: false }))
 app.use(mongoSanitize())
 app.use(passport.initialize())
 app.use(passport.session())
+
 app.use((req, res, next) => {
 	res.locals.user = req.user
 	res.locals.success = req.flash('success')
@@ -78,7 +80,6 @@ app.use((req, res, next) => {
 	res.locals.info = req.flash('info')
 	next()
 })
-
 
 const isLoggedIn = (req, res, next) => {
 	if(!req.isAuthenticated()){
@@ -90,6 +91,12 @@ const isLoggedIn = (req, res, next) => {
 		next()
 	}
 }
+
+const isAdmin = async (req, res, next) => {
+	const isAdmin = await User.findById(req.user._id).select('isAdmin').lean()
+	req.user.isAdmin = isAdmin
+	next()
+} 
 
 app.engine('ejs', ejsMate)
 app.set('views', path.join(__dirname, '/views'))
@@ -136,7 +143,7 @@ app.get('/thread/:tID/post/:id/edit', isLoggedIn, wrapAsync(async (req, res, nex
 	}
 }))
 
-app.get('/thread/:id', wrapAsync(async (req, res, next) => {
+app.get('/thread/:id', isAdmin, wrapAsync(async (req, res, next) => {
 	const thread = await Thread.findById(req.params.id).populate('posts').select('title posts').lean()
 	if(!thread){
 		return next(new expressError("Page Not Found", 404))
@@ -266,11 +273,25 @@ app.patch('/thread/:tid/post/:id', isLoggedIn, wrapAsync(async (req, res, next) 
 	res.redirect(`/thread/${req.params.tid}`)
 }))
 
-app.delete('/thread/:tid/post/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
+app.delete('/thread/:tid/post/:id', isLoggedIn, isAdmin, wrapAsync(async (req, res, next) => {
 	const post = await Post.findById(req.params.id)
 	if(post.author._id.equals(req.user._id)){
-		await Post.findByIdAndDelete(req.params.id)
+		await post.remove()
 		req.flash('success', 'Successfully deleted your post!')
+	}
+	else if(req.user.isAdmin){
+		if(!req.body.delReason){
+			return res.render('delReasonPost', { pageTitle: "Reason for deletion", tid: req.params.tid, pid: req.params.id})
+		}
+		else{
+			const delLog = new DelLogs({
+				id: post._id,
+				reason: req.body.delReason
+			})
+			await delLog.save()
+			await post.remove()
+			req.flash('success', 'Successfully deleted the specified post!')
+		}
 	}
 	else{
 		req.flash('error', `Slow down there! You are NOT allowed to do that.`)
@@ -284,6 +305,29 @@ app.post('/login', passport.authenticate('local', { failureFlash: true, failureR
 	delete req.session.returnTo
 	req.flash('success', `Welcome back, ${username}! Logged in successfully.`)
 	res.redirect(redirectTo)
+}))
+
+app.delete('/thread/:id', isLoggedIn, isAdmin, wrapAsync(async (req, res, next) => {
+	const thread = await Thread.findById(req.params.id)
+	if(req.user.isAdmin){
+		if(!req.body.delReason){
+			return res.render('delReasonThread', { pageTitle: "Reason for deletion", tid: req.params.id })
+		}
+		else{
+			const delLog = new DelLogs({
+				id: thread._id,
+				reason: req.body.delReason
+			})
+			await delLog.save()
+			await thread.remove()
+			req.flash('success', 'Successfully deleted the specified thread.')
+			res.redirect('/')
+		}
+	}
+	else{
+		req.flash('error', 'You are NOT allowed to do that!')
+		res.redirect(`/thread/${req.params.id}`)
+	}
 }))
 
 app.get('/profile/:name', wrapAsync(async (req, res, next) => {

@@ -29,12 +29,11 @@ const postSchema = new mongoose.Schema({
 	}
 })
 
-postSchema.post('findOneAndDelete', async function (data) {
+postSchema.post('remove', async function (data) {
 	const Thread = require('./threads')
 	const User = require('./users')
 
-	console.log(data)
-	const parentThread = await Thread.findById(data.parentThread).populate('posts')
+	const parentThread = await Thread.findById(data.parentThread).populate('posts').select('posts')
 	parentThread.posts.pull(data._id)
 	await parentThread.save()
 	const author = await User.findById(data.author)
