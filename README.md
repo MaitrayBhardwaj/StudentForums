@@ -14,3 +14,6 @@
 * passport - for easy user authentication
 * passport-local - for Passport's local strategy
 * passport-local-mongoose - for easy integration between passport and mongoose
+* connect-mongo - for proper session store
+* helmet - for countering common security issues like XSS etc.
+* express-mongo-sanitize - for santizing the requests to prevent Mongo injections
