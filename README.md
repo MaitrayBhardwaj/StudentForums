@@ -2,20 +2,21 @@
  StudentForums.github.io but with backend!
 
 ## Packages Used(for now)
-* express - for server routing
-* mongoose - for storing data permanently
-* ejs - for embedded javascript
-* ejs-mate - assists in ejs
-* method-override - enables the use of DELETE, PATCH, PUT requests
-* joi - for data validation
-* express-session - for sessions
-* connect-flash - for flash messages
-* dotenv - for accessing environment variables
-* passport - for easy user authentication
-* passport-local - for Passport's local strategy
-* passport-local-mongoose - for easy integration between passport and mongoose
-* connect-mongo - for proper session store
-* helmet - for countering common security issues like XSS etc.
-* express-mongo-sanitize - for santizing the requests to prevent Mongo injections
+* express - Fast, unopinionated, minimalist web framework for node.
+* mongoose - Mongoose is a MongoDB object modeling tool designed to work in an asynchronous environment. Mongoose supports both promises and callbacks.
+* ejs - Embedded JavaScript templates
+* ejs-mate - Express 4.x layout, partial and block template functions for the EJS template engine.
+* method-override - Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn't support it.
+* joi - The most powerful schema description language and data validator for JavaScript.
+* express-session - Simple session middleware for Express
+* connect-flash - Flash message middleware for Connect.
+* dotenv - Loads environment variables from .env file
+* passport - Simple, unobtrusive authentication for Node.js.
+* passport-local - Local username and password authentication strategy for Passport.
+* passport-local-mongoose - Mongoose plugin that simplifies building username and password login with Passport
+* connect-mongo - MongoDB session store for Express and Connect
+* helmet - Help secure Express/Connect apps with various HTTP headers
+* express-mongo-sanitize - Sanitize your express payload to prevent MongoDB operator injection.
+* nodemailer - Easy as cake e-mail sending from your Node.js applications
 
-Secretly hosted [here](https://studentforums.maitraybhardwaj.repl.co).
+Hosted on: https://studentforums.maitraybhardwaj.repl.co
