@@ -1,0 +1,50 @@
+.formCont{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.formCont p{
+	margin-top: 3em;
+	margin-bottom: 2em;
+}
+
+.formCont form{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.formCont form button{
+	border: 0;
+	transition: transform 0.2s;
+}
+
+.formCont form button:hover{
+	background-color: #1C6DD0;
+	color: white;
+	transform: translateY(-2px);
+}
+
+.formCont form input, .formCont form button{
+	width: 200%;
+}
+
+.formCont form input{
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.formCont a{
+	margin: 2em 0;
+}
+
+.formCont a:hover{
+	color: #1C6DD0;
+}
+
+body{
+	background-image: url('../icons/Student 03.jpg');
+	background-position: center;
+	background-size: cover;
+}

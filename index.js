@@ -12,12 +12,14 @@ const passportLocal = require('passport-local')
 const mongoSanitize = require('express-mongo-sanitize')
 const helmet = require('helmet')
 const mongoStore = require('connect-mongo')
+const nodemailer = require('nodemailer')
 
 const Thread = require('./models/threads')
 const Post = require('./models/posts')
 const User = require('./models/users')
 const Category = require('./models/categories')
 const DelLogs = require('./models/delLogs')
+const UserVerification = require('./models/userVerification')
 
 const wrapAsync = require('./utils/wrapAsync')
 const validateNewThread = require('./utils/validateNewThread')
@@ -105,6 +107,14 @@ app.set('view engine', 'ejs')
 passport.use(new passportLocal(User.authenticate()))
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
+
+const transporter = nodemailer.createTransport({
+	host: 'smtp.gmail.com',
+	auth: {
+		user: process.env.mailID,
+		pass: process.env.mailPass
+	}
+})
 
 const allCategories = ['General Discussion', 'Doubt Solving', 'Consultation', 'Resources', 'Support', 'Miscellaneous']
 
@@ -232,27 +242,115 @@ app.get('/search', wrapAsync(async (req, res, next) => {
 }))
 
 app.get('/signup', (req, res) => {
-	res.render('register', { pageTitle: 'Sign Up' })
+	if(!req.user){
+		res.render('register', { pageTitle: 'Sign Up' })
+	}
+	else{
+		req.flash('success', 'You are already signed up.')
+		res.redirect('/')
+	}
 })
 
 app.get('/login', (req, res) => {
-	res.render('login', { pageTitle: 'Login' })
+	if(!req.user){
+		res.render('login', { pageTitle: 'Login' })
+	}
+	else{
+		req.flash('success', "You are already logged in.")
+		res.redirect('/')
+	}
 })
 
 app.post('/signup', validateNewUser, wrapAsync(async (req, res, next) => {
 	const { username, email, password } = req.body
 	const user = new User({ username, email })
 	try{
-		const newUser = await User.register(user, password)
-		req.login(newUser, err => {
-			if(err) return next(err);
-			req.flash('success', 'Successfully signed up on StuFor!')
-			res.redirect('/')
+		const OTP = Math.floor((Math.random() * 9000) + 1000)
+		const mailOptions = {
+			from: process.env.mailID,
+			to: email,
+			subject: "Verify your account on StuFor",
+			html: `<p>Your OTP is <b>${OTP}</b>. Enter it when you are prompted to verify your account. <br> This OTP will expire in <b>1 hour</b> from now.</p>`
+		}
+		const userVer = new UserVerification({
+			uid: user._id,
+			OTP,
+			createdAt: Date.now(),
+			expires: Date.now() + 1000 * 60 * 60
 		})
+		await userVer.save()
+		await transporter.sendMail(mailOptions)
+		req.session.unverifiedUser = user
+		req.session.unverifiedUserPass = password
+		res.redirect('/verify')
 	}
 	catch(err) {
 		req.flash('error', err.message)
 		res.redirect('/signup')
+	}
+}))
+
+app.get('/verify', (req, res) => {
+	res.render('verify', { pageTitle: 'Verify Your Account' })
+})
+
+app.get('/resend', wrapAsync(async (req, res, next) => {
+	const OTP = Math.floor((Math.random() * 9000) + 1000)
+	const { unverifiedUser } = req.session
+	const userLog = await UserVerification.findOne({ uid: unverifiedUser._id })
+	if(!userLog){
+		const userVer = new UserVerification({
+			uid: unverifiedUser.email,
+			OTP,
+			createdAt: Date.now(),
+			expires: Date.now() + 1000 * 60 * 60
+		})
+		await userVer.save()
+	}
+	else{
+		userLog.OTP = OTP
+		userLog.createdAt = Date.now()
+		userLog.expires = Date.now() + 1000 * 60 * 60 
+		await userLog.save()
+	}
+	const mailOptions = {
+		from: process.env.mailID,
+		to: unverifiedUser.email,
+		subject: "Verify your account on StuFor",
+		html: `<p>Your OTP is <b>${OTP}</b>. Enter it when you are prompted to verify your account. <br> This OTP will expire in <b>1 hour</b> from now.</p>`
+	}
+	await transporter.sendMail(mailOptions)
+	res.redirect('/verify')
+}))
+
+app.post('/verify', wrapAsync(async (req, res, next) => {
+	const OTPEntered = req.body.OTP
+	const { unverifiedUser, unverifiedUserPass } = req.session
+	const unVerified = await UserVerification.findOne({ uid: unverifiedUser._id })
+	const unVerifiedUser = new User(unverifiedUser)
+	const { OTP } = unVerified
+	if(unVerified.expires < Date.now()){
+		await unVerified.remove()
+		req.flash('error', 'Time out! This OTP has expired. Get a different one.')
+		res.redirect('/signup')
+	}
+	else if(OTP === OTPEntered){
+		unverifiedUser.isVerified = true
+		console.dir(unVerified)
+		console.dir(unVerifiedUser)
+		const newUser = await User.register(unVerifiedUser, unverifiedUserPass)
+		await unVerified.remove()
+		req.login(newUser, err => {
+			if(err) return next(err);
+			delete req.session.unverifiedUser
+			delete req.session.unverifiedUserPass
+			req.flash('success', 'Successfully signed up on StuFor!')
+			res.redirect('/')
+		})
+	}
+	else{
+		req.flash('error', 'Wrong OTP entered. Please try again.')
+		res.redirect('/verify')
 	}
 }))
 

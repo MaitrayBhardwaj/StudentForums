@@ -4,6 +4,10 @@
 	outline: none;
 }
 
+button{
+	cursor: pointer;
+}
+
 input:focus{
 	border: 0.01em solid #56BBF1;
 }
