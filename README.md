@@ -1,7 +1,13 @@
 # StudentForums
- StudentForums.github.io but with backend!
+StudentForums(abbreviated to StuFor) is a forum website designed for students. This project was developed as a part of the Software Engineering course.
 
-## Packages Used(for now)
+To give a quick overview,
+* Plain HTML, CSS and JavaScript are applied for the frontend. No frameworks like Bootstrap or Tailwind CSS are used.
+* The backend portion is written in Node.js.
+* Various npm packages are used in the backend. Those are listed below.
+* As for the database, MongoDB is being used as the primary database.
+
+## Packages Used
 * express - Fast, unopinionated, minimalist web framework for node.
 * mongoose - Mongoose is a MongoDB object modeling tool designed to work in an asynchronous environment. Mongoose supports both promises and callbacks.
 * ejs - Embedded JavaScript templates
