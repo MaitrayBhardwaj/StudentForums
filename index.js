@@ -95,8 +95,10 @@ const isLoggedIn = (req, res, next) => {
 }
 
 const isAdmin = async (req, res, next) => {
-	const isAdmin = await User.findById(req.user._id).select('isAdmin').lean()
-	req.user.isAdmin = isAdmin
+	if(req.user){
+		const isAdmin = await User.findById(req.user._id).select('isAdmin').lean()
+		req.user.isAdmin = isAdmin
+	}
 	next()
 }
 
