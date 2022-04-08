@@ -1,5 +1,5 @@
 # StudentForums
-StudentForums(abbreviated to StuFor) is a forum website designed for students. This project was developed as a part of the Software Engineering course.
+StuFor(short for StudentForums) is a forum website designed for students. This project was developed as a part of the Software Engineering course.
 
 To give a quick overview,
 * Plain HTML, CSS and JavaScript are applied for the frontend. No frameworks like Bootstrap or Tailwind CSS are used.
