@@ -284,7 +284,7 @@ app.post('/signup', validateNewUser, wrapAsync(async (req, res, next) => {
 		await transporter.sendMail(mailOptions)
 		req.session.unverifiedUser = user
 		req.session.unverifiedUserPass = password
-		res.redirect('/verify')
+		res.redirect('/signup/verify')
 	}
 	catch(err) {
 		req.flash('error', err.message)
@@ -292,11 +292,11 @@ app.post('/signup', validateNewUser, wrapAsync(async (req, res, next) => {
 	}
 }))
 
-app.get('/verify', (req, res) => {
+app.get('/signup/verify', (req, res) => {
 	res.render('verify', { pageTitle: 'Verify Your Account' })
 })
 
-app.get('/resend', wrapAsync(async (req, res, next) => {
+app.get('/signup/resend', wrapAsync(async (req, res, next) => {
 	const OTP = Math.floor((Math.random() * 9000) + 1000)
 	const { unverifiedUser } = req.session
 	const userLog = await UserVerification.findOne({ uid: unverifiedUser._id })
@@ -322,10 +322,67 @@ app.get('/resend', wrapAsync(async (req, res, next) => {
 		html: `<p>Your OTP is <b>${OTP}</b>. Enter it when you are prompted to verify your account. <br> This OTP will expire in <b>1 hour</b> from now.</p>`
 	}
 	await transporter.sendMail(mailOptions)
-	res.redirect('/verify')
+	req.flash('success', `New OTP sent to ${unverifiedUser.email}. It will expire in 1 hour.`)
+	res.redirect('/signup/verify')
 }))
 
-app.post('/verify', wrapAsync(async (req, res, next) => {
+app.get('/password/verify', isLoggedIn, wrapAsync(async (req, res, next) => {
+	const user = await User.findById(req.user._id)
+	const OTP = Math.floor((Math.random() * 9000) + 1000)
+	const userLog = await UserVerification.findOne({ uid: user._id })
+	const mailOptions = {
+		from: process.env.mailID,
+		to: user.email,
+		subject: "Verify your account on StuFor for changing password",
+		html: `<p>Your OTP is <b>${OTP}</b>. Enter it when you are prompted to while changing your password. <br> This OTP will expire in <b>1 hour</b> from now.</p>`
+	}
+	if(!userLog){
+		const userVer = new UserVerification({
+			uid: user._id,
+			OTP,
+			createdAt: Date.now(),
+			expires: Date.now() + 1000 * 60 * 60
+		})
+		await userVer.save()
+	}
+	else{
+		userLog.OTP = OTP
+		userLog.createdAt = Date.now()
+		userLog.expires = Date.now() + 1000 * 60 * 60 
+		await userLog.save()
+	}
+	await transporter.sendMail(mailOptions)
+	res.render('changePass', { pageTitle: "Change Password"})
+}))
+
+app.post('/password/verify', isLoggedIn, wrapAsync(async (req, res, next) => {
+	const { newPass } = req.body
+	const OTPEntered = req.body.OTP
+	const user = await User.findById(req.user._id)
+	const changePassLog = await UserVerification.findOne({ uid: user._id })
+	const { OTP } = changePassLog
+	if(changePassLog.expires < Date.now()){
+		await changePassLog.remove()
+		req.flash('error', 'Time out! This OTP has expired. Get a different one.')
+		res.redirect('/password/verify')
+	}
+	else if(OTP === OTPEntered){
+		await changePassLog.remove()
+		await user.setPassword(newPass, async (err, user) => {
+	        if (err) return next(err);
+	        await user.save();
+	        req.flash('success', 'Password changed successfully.')
+	        res.redirect(`/profile/${user.username}`)
+	    });
+
+	}
+	else{
+		req.flash('error', 'Wrong OTP entered. Please try again.')
+		res.redirect('/password/verify')
+	} 
+}))
+
+app.post('/signup/verify', wrapAsync(async (req, res, next) => {
 	const OTPEntered = req.body.OTP
 	const { unverifiedUser, unverifiedUserPass } = req.session
 	const unVerified = await UserVerification.findOne({ uid: unverifiedUser._id })
@@ -338,8 +395,6 @@ app.post('/verify', wrapAsync(async (req, res, next) => {
 	}
 	else if(OTP === OTPEntered){
 		unverifiedUser.isVerified = true
-		console.dir(unVerified)
-		console.dir(unVerifiedUser)
 		const newUser = await User.register(unVerifiedUser, unverifiedUserPass)
 		await unVerified.remove()
 		req.login(newUser, err => {
@@ -352,7 +407,7 @@ app.post('/verify', wrapAsync(async (req, res, next) => {
 	}
 	else{
 		req.flash('error', 'Wrong OTP entered. Please try again.')
-		res.redirect('/verify')
+		res.redirect('/signup/verify')
 	}
 }))
 
@@ -372,6 +427,7 @@ app.patch('/thread/:tid/post/:id', isLoggedIn, wrapAsync(async (req, res, next) 
 	}
 	res.redirect(`/thread/${req.params.tid}`)
 }))
+
 
 app.delete('/thread/:tid/post/:id', isLoggedIn, isAdmin, wrapAsync(async (req, res, next) => {
 	const post = await Post.findById(req.params.id)

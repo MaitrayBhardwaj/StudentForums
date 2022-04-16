@@ -22,7 +22,7 @@
 	flex-direction: column;
 }
 
-.formCont form input, .formCont form textarea, .formCont form button{
+.formCont form input, .formCont form textarea, .formCont form button, .changePass{
 	font-family: 'Roboto Condensed', sans-serif;
 	padding: 1.2em;
 	margin: 1em;
@@ -35,13 +35,17 @@
 	font-size: 1em;
 }
 
-.formCont form button{
+.changePass{
+	text-align: center;
+}
+
+.formCont form button, .changePass{
 	color: white;
 	background-color: #1C6DD0;
 	transition: background-color 0.1s color 0.1s ease-in-out;
 }
 
-.formCont form button:hover{
+.formCont form button:hover, .changePass:hover{
 	color: black;
 	background-color: #DDD;
 }

@@ -6,11 +6,12 @@
 <div class="container">
 	<div class="formCont">
 		<h1>Enter the OTP</h1>
-		<p>Enter the One-Time Password sent on the email you entered to register</p>
-		<form action="/signup/verify" class="needs-validation" method="POST" novalidate>
+		<p>Enter the One-Time Password sent on your registered email to verify</p>
+		<form action="/password/verify" class="needs-validation" method="POST" novalidate>
 			<input type="text" name="OTP" placeholder="Enter the OTP">
+			<input type="password" name="newPass" placeholder="Enter the new password">
 			<button>Submit</button>
 		</form>
-		<a href="/signup/resend">Resend OTP</a>
+		<a href="/password/verify">Resend OTP</a>
 	</div>
 </div>
