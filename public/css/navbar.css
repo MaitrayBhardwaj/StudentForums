@@ -4,6 +4,10 @@
 	outline: none;
 }
 
+body{
+	width: 100vw;
+}
+
 button{
 	cursor: pointer;
 }
@@ -18,11 +22,15 @@ a{
 }
 
 #header{
-	padding: 1em 1em 1em 1em;
-	background-color: white;
-	border-bottom: 0.01em solid #CCC;
+	padding: 1em;
+	background-color: #fff;
+	box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
 	display: flex;
-	justify-content: space-evenly;
+	overflow-x: hidden;
+}
+
+#header > * {
+	margin: 0 auto;
 }
 
 .searchBox{
@@ -75,12 +83,13 @@ div.right a{
 	font-size: 1.3em;
 	margin-left: 0.5em;
 	margin-right: 0.5em;
+	border-bottom: 2px solid transparent;
 	font-family: 'Roboto Condensed', sans-serif;
-	transition: border-bottom 0.1s;
+	transition: border-bottom-color 0.1s ease;
 }
 
 div.right a:hover{
-	border-bottom: 2px solid black;
+	border-bottom-color: black;
 }
 
 
@@ -150,6 +159,15 @@ div.right{
 	border: 2px solid #1e1e1e;
 }
 
+.navLinks{
+	display: flex;
+	align-items: center;
+}
+
+.navLinks > a{
+	margin: 0 auto;
+}
+
 .loginBtn{
 	margin-left: 0 !important;
 }
@@ -157,4 +175,99 @@ div.right{
 .signupBtn:hover, .loginBtn:hover{
 	background-color: white;
 	color: #1e1e1e;
+}
+
+.userEntryLinks{
+	display: flex;
+	align-items: center;
+}
+
+.userEntryLinks {
+	display: flex;
+	align-items: center;
+}
+
+@media (max-width: 1024px) {
+	.searchBox{
+		display: none;
+	}
+}
+
+@media (max-width: 768px) {
+	span.main{
+		display: none;
+	}
+}
+
+@media (max-width: 682px) {
+	.userEntryLinks {
+		font-size: 0.75em;
+	}
+
+	.searchBox{
+		display: block;
+	}
+
+	.searchBox input{
+		width: 100px;
+	}
+
+	.navLinks{
+		display: none;
+	}
+
+	.userAvatar img{
+		width: 40px;
+		height: 40px;
+		margin-left: 0;
+	}
+
+	.searchBox{
+		flex-grow: 1;
+	}
+
+	.left a{
+		margin-right: 0.25em;
+	}
+}
+
+@media (max-width: 682px) {
+	.userEntryLinks{
+		font-size: 0.85em;
+	}
+}
+
+@media (max-width: 415px) {
+	.userEntryLinks{
+		font-size: 0.75em;
+		padding: 0.75em 0;
+	}
+
+	.searchBox input{
+		width: 75px;
+	}
+}
+
+@media (max-width: 390px) {
+	.userEntryLinks{
+		font-size: 0.7em;
+	}
+}
+
+@media (max-width: 320px) {
+	#header{
+		padding: 0.5em;
+	}
+
+	.searchBox input{
+		padding-right: 1em;
+	}
+
+	.userEntryLinks{
+		font-size: 0.65em;
+	}
+
+	.threadLink{
+		font-size: 1em !important;
+	}
 }

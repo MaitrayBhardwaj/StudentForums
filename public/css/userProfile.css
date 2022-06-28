@@ -97,3 +97,43 @@ body{
 .editProf a{
 
 }
+
+@media (max-width: 850px) {
+	.profileImg{
+		width: 128px;
+		height: 128px;
+		border-radius: 50%;
+	}
+
+	.leftPane{
+		padding: 1em 0.5em;
+	}
+}
+
+@media (max-width: 670px) {
+	.container{
+		flex-direction: column;
+	}
+
+	.leftPane{
+		border-right: 0;
+	}
+
+	.profileImg{
+		width: 256px;
+		height: 256px;
+	}
+}
+
+@media (max-width: 500px) {
+	.container{
+		margin: 1em;
+	}
+}
+
+@media (max-width: 350px) {
+	.profileImg{
+		width: 128px;
+		height: 128px;
+	}
+}

@@ -13,6 +13,7 @@
 	margin-bottom: 1em;
 	font-size: 3em;
 	font-weight: 500;
+	text-align: center;
 }
 
 .container p{
@@ -30,24 +31,19 @@
 	font-family: 'Roboto Condensed', sans-serif;
 }
 
-.recent, .popular{
+.recent{
 	width: 100%;
 	padding: 0.5em;
+	margin: 2em 0 0 0;
 	flex-grow: 1;
 }
 
-.popular{
-	padding-bottom: 4em;
-	border-bottom: 0.01em solid #CCC;
-}
-
-.recentThreads, .popThreads{
+.recentThreads{
 	list-style-type: none;
 }
 
-.recent h1, .popular h1{
+.recent h1{
 	font-size: 1.5em;
-	padding: 2em 0.5em 0.25em 0;
 }
 
 .recentThreads li a:hover, .popThreads li a:hover{
@@ -97,18 +93,42 @@
 	align-items: center;
 }
 
+.headingAndAddThread h1{
+	padding: 0;
+}
+
 .headingAndAddThread a{
 	padding: 0.5em;
-	margin-top: 1em;
 	font-size: 1em;
 	background-color: white;
+	margin-right: 0.5em;
 	font-family: 'Roboto Condensed', sans-serif;
 	border: 0.01em solid #CCC;
-	justify-self: flex-end;
 	margin-left: auto;
-	margin-bottom: 0;
 }
 
 .headingAndAddThread a:hover{
 	background-color: #EEE;
+}
+
+@media (max-width: 425px) {
+	.container p{
+		width: 90vw;
+	}
+
+	.timeCreated{
+		display: none;
+	}
+
+	.threadLink{
+		width: 33%;
+	}
+
+}
+
+@media (max-width: 320px) {
+	.container{
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+	}
 }

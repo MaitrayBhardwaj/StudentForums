@@ -20,6 +20,7 @@
 	padding: 2em;
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 }
 
 .category{
@@ -51,8 +52,8 @@
 }
 
 .threads{
-	align-self: stretch;
 	display: flex;
+	align-self: stretch;
 	flex-direction: column-reverse;
 	font-family: 'Roboto Condensed', sans-serif;
 }
@@ -66,6 +67,10 @@
 .popular{
 	padding-bottom: 4em;
 	border-bottom: 0.01em solid #CCC;
+}
+
+.ogPoster{
+	text-align: left;
 }
 
 .recentThreads, .popThreads{
@@ -89,9 +94,8 @@
 }
 
 .threadLink{
-	flex-grow: 1;
+	margin-right: auto;
 	font-size: 1.2em;
-	width: 33%;
 }
 
 .threadInfo{
@@ -116,6 +120,18 @@
 }
 
 .userInfo{
-	justify-self: flex-end;
 	flex-grow: 0.5;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+@media (max-width: 425px) {
+	.timeCreated{
+		display: none;
+	}
+
+	.threadLink{
+		width: 33%;
+	}
 }

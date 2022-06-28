@@ -6,22 +6,26 @@
 	<div class="searchBox">
 		<form action="/search" method="GET">
 			<input type="text" name="q" placeholder="Search Topics...">
-			<button type="submit">Search</button>
+			<button type="submit"><i class="bi bi-search searchIcon"></i></button>
 		</form>
 	</div>
 
 	<div class="right">
-		<a href="/">Home</a>
-		<a href="/search">Search</a>
-		<a href="/#recent">Recent</a>
-		<a href="/#popular">Popular</a>
-		<a href="#" id="categoriesNav">Categories</a>
-		<% if(user) { %>
-			<a href="/profile/<%= user.username %>"><img src="/icons/user.png"></a>
-		<% } else { %>
-			<a href="/signup" class="signupBtn">Sign Up</a>
-			<a href="/login" class="loginBtn">Log In</a>
-		<% } %>
+		<div class="navLinks">
+			<a href="/">Home</a>
+			<a href="/search">Search</a>
+			<a href="/#recent">Recent</a>
+			<a href="/#popular">Popular</a>
+			<a href="#" id="categoriesNav">Categories</a>
+		</div>
+		<div class="userEntryLinks">
+			<% if(user) { %>
+				<a href="/profile/<%= user.username %>" class="userAvatar"><img src="/icons/user.png"></a>
+			<% } else { %>
+				<a href="/signup" class="signupBtn">Sign Up</a>
+				<a href="/login" class="loginBtn">Log In</a>
+			<% } %>
+		</div>
 	</div>
 </nav>
 

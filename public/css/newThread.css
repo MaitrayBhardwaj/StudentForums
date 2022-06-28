@@ -57,3 +57,33 @@
 .not-validated{
 	border: 0.05em solid red;
 }
+
+@media (max-width: 800px){
+	.container{
+		transform: scale(0.9);
+	}
+}
+
+@media (max-width: 690px) {
+	.container{
+		transform: scale(0.8);
+	}
+}
+
+@media (max-width: 590px) {
+	.container{
+		transform: scale(0.7);
+	}
+}
+
+@media (max-width: 420px) {
+	.container{
+		transform: scale(0.6)  translateY(-5em);
+	}
+}
+
+@media (max-width: 350px) {
+	.container{
+		transform: scale(0.5);
+	}
+}
