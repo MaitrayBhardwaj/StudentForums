@@ -9,7 +9,7 @@
 .container h2{
 	align-self: flex-start;
 	font-family: 'Roboto', sans-serif;
-	font-size: 2.5em;
+	font-size: 2em;
 	margin: 0 0 0.5em 0;
 	font-weight: 800;
 	border-bottom: 0.01em solid #CCC;
@@ -30,6 +30,7 @@
 
 .container form input, .container form button{
 	padding: 0.75em;
+	margin: 0.5em;
 	font-family: 'Roboto Condensed', sans-serif;
 	border: 0.01em solid #CCC;
 	outline: none;
@@ -80,15 +81,16 @@
 }
 
 .threadLink{
-	flex-grow: 2;
+	margin-right: auto;
 	font-size: 1.2em;
 	width: 33%;
+	word-break: break-all;
 }
 
 .threadInfo{
 	align-items: center;
 	display: flex;
-	flex-grow: 1;
+	margin-left: auto;
 	flex-direction: column;
 }
 
@@ -108,8 +110,21 @@
 .userInfo{
 	justify-self: flex-end;
 	flex-grow: 0.5;
+	margin-left: auto;
+	flex-direction: column;
+	align-items: flex-start;
 }
 
 .container form button:hover{
 	background-color: #DDD;
+}
+
+@media (max-width: 425px) {
+	.timeCreated{
+		display: none;
+	}
+
+	.threadLink{
+		width: 33%;
+	}
 }

@@ -57,11 +57,16 @@
 	background-color: #BBB;
 }
 
+form.needs-validation{
+	margin: 0 !important;
+}
+
 #newPostCont{
 	display: block;
 	font-family: 'Roboto Condensed', sans-serif;
 	font-size: 1em;
 	padding: 0.75em;
+	width: 100%;
 }
 
 .postBtns{
@@ -116,4 +121,10 @@
 
 .buttons{
 	display: flex;
+}
+
+@media (min-width: 768px) {
+	#newPostCont{
+		width: 50%;
+	}
 }
